@@ -8,7 +8,9 @@ public class Game : MonoBehaviour {
 
     private int money = 0, point = 1;
 
+    private int[] Base = { 100, 1000, 10000 };//базовая цена за здание
     private int[] costs = { 100, 1000, 10000 }; //цены за здания
+    private int[] levels = { 1, 0, 0 }; //уровни зданий
     private int[] points = { 5, 50, 500 }; //количество монет за нажатие на здание
     private bool[] isPurchased = { true, false, false }; //true если здание под индексом i приобретено
     //costs и isPurchased те включают в себя самое первое здание.
@@ -45,6 +47,9 @@ public class Game : MonoBehaviour {
             }
             money -= costs[number];//отнимаем с текущего счета деньги за здание
             scoreText.text = money + "$";
+            levels[number]++;
+            costs[number] =(int)(Base[number] * Math.Pow(1.10, levels[number]));
+            ShopMenu.GetComponentsInChildren<Button>()[number].GetComponentInChildren<Text>().text = "Улучшить уровень за " + costs[number] + "$";
         }
     }
 
@@ -52,6 +57,26 @@ public class Game : MonoBehaviour {
     public void show_hide_menu()
     {
         //будем показывать или прятать меню покупок, при клике на кнопку SHOP
+        if (!ShopMenu.activeSelf)
+        {
+            Button[] buttons = ShopMenu.GetComponentsInChildren<Button>();
+            
+            for (int i = 0; i < buttons.Length; ++i)
+            {
+                Debug.Log(buttons[i].GetComponentInChildren<Text>().text);
+                if (isPurchased[i])
+                {
+                    buttons[i].GetComponentInChildren<Text>().text = "Улучшить уровень за " + costs[i] + "$";
+                    
+                }
+                else
+                {
+                    buttons[i].GetComponentInChildren<Text>().text = "Купить бизнес за " + costs[i] + "$";
+                }
+            }
+        }
+
         ShopMenu.SetActive(!ShopMenu.activeSelf);
+        
     }
 }
