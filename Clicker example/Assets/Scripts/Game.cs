@@ -28,7 +28,7 @@ public class Game : MonoBehaviour {
         if (isPurchased[number])
         {
             //если здание куплено, то нам доступен бизнес и можем получить деньги.
-            money += points[number];
+            money += points[number]*levels[number];
             scoreText.text = money + "$";
         }
 
@@ -46,10 +46,12 @@ public class Game : MonoBehaviour {
                 isPurchased[number] = true;
             }
             money -= costs[number];//отнимаем с текущего счета деньги за здание
-            scoreText.text = money + "$";
-            levels[number]++;
-            costs[number] =(int)(Base[number] * Math.Pow(1.10, levels[number]));
-            ShopMenu.GetComponentsInChildren<Button>()[number].GetComponentInChildren<Text>().text = "Улучшить уровень за " + costs[number] + "$";
+            scoreText.text = money + "$"; //показываем текущий счет
+            levels[number]++;//увеличиваем уровень
+            costs[number] =(int)(Base[number] * Math.Pow(1.10, levels[number]));//по формуле считаем сумму для следующего апгрейда
+            
+            ShopMenu.GetComponentsInChildren<Button>()[number].GetComponentInChildren<Text>().text = "Улучшить уровень за " + costs[number] + "$"; //обновляем текст в магазине
+            Businesses[number].GetComponentInChildren<Text>().text = points[number] * levels[number] + "$"; //обновляем кнопку, которая показывает прибыль за тык
         }
     }
 
@@ -59,6 +61,7 @@ public class Game : MonoBehaviour {
         //будем показывать или прятать меню покупок, при клике на кнопку SHOP
         if (!ShopMenu.activeSelf)
         {
+            //если мы открываем меню, то нам надо обновить значения кнопок
             Button[] buttons = ShopMenu.GetComponentsInChildren<Button>();
             
             for (int i = 0; i < buttons.Length; ++i)
@@ -66,17 +69,19 @@ public class Game : MonoBehaviour {
                 Debug.Log(buttons[i].GetComponentInChildren<Text>().text);
                 if (isPurchased[i])
                 {
+                    //если здание куплено, то отображаем, что можем улучшить
                     buttons[i].GetComponentInChildren<Text>().text = "Улучшить уровень за " + costs[i] + "$";
                     
                 }
                 else
                 {
+                    //если не куплен, то отображаем, что можем купить
                     buttons[i].GetComponentInChildren<Text>().text = "Купить бизнес за " + costs[i] + "$";
                 }
             }
         }
 
-        ShopMenu.SetActive(!ShopMenu.activeSelf);
+        ShopMenu.SetActive(!ShopMenu.activeSelf);//скрываем или показываем меню
         
     }
 }
