@@ -11,7 +11,7 @@ public class HandClick : MonoBehaviour
 
     private float time_to_wait = 0.2f;//время на обновление кнопки 
 
-    private bool is_active = false;
+    private bool is_active = false; // true если кнопка активирована
     // Start is called before the first frame update
     void Start()
     {
@@ -23,6 +23,7 @@ public class HandClick : MonoBehaviour
     {
         if (!is_active)
         {
+            //Добавляем монеты за клик, если нам доступна кнопка
             GetComponent<Game>().AddMoney(money);
             
             StartCoroutine(Waiting());

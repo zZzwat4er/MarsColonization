@@ -41,6 +41,7 @@ public class Game : MonoBehaviour {
         money += count;
         scoreText.text = money + "$";
     }
+    
     public void OnClick(int number)
     {
 
