@@ -14,6 +14,9 @@ public class Game : MonoBehaviour {
     private int[] points = { 5, 50, 500 }; //количество монет за нажатие на здание
     private bool[] isPurchased = { true, false, false }; //true если здание под индексом i приобретено
     //costs и isPurchased те включают в себя самое первое здание.
+    private float[] baseClickPeriod = { 1, 5, 10 };//время Автоклика в сикундах
+    private bool[][] autoClickAbility = {new bool[] {true , false, false}, // true если здание может совершать автоклик
+                                         new bool[] {true, true, true} };  // true если здание может совершать автоклик вданный момент
 
     public Text scoreText;//счетчик текущего счета
     public GameObject ShopMenu; //Панель меню
@@ -44,6 +47,8 @@ public class Game : MonoBehaviour {
                 //меняем цвет здания, которое покупаем и отмечаем, что купили его
                 Businesses[number].GetComponent<Image>().color = Businesses[0].GetComponent<Image>().color;
                 isPurchased[number] = true;
+                // позволяем зданию совершать автоклик в момент покупки
+                autoClickAbility[0][number] = true;
             }
             money -= costs[number];//отнимаем с текущего счета деньги за здание
             scoreText.text = money + "$"; //показываем текущий счет
@@ -83,5 +88,21 @@ public class Game : MonoBehaviour {
 
         ShopMenu.SetActive(!ShopMenu.activeSelf);//скрываем или показываем меню
         
+    }
+    //Coroutine отмеряющее время с начала автоклика до момента поступления денег
+    private IEnumerator AutoClick(int number)
+    {
+        autoClickAbility[1][number] = false;
+        OnClick(number);
+        yield return new WaitForSeconds(baseClickPeriod[number]);
+        autoClickAbility[1][number] = true;
+    }
+
+    private void FixedUpdate()
+    {
+        //пробегаемся по всем зданиям если оно может сделать автоклик вообще (autoClickAbility[0][i])
+        //и может сделать автоклик в данный момент autoClickAbility[1][i] запускаем coroutine
+        for (int i = 0; i < autoClickAbility[0].Length; i++)
+            if (autoClickAbility[0][i] && autoClickAbility[1][i]) StartCoroutine(AutoClick(i));
     }
 }
