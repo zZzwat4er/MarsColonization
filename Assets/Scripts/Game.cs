@@ -18,6 +18,8 @@ public class Game : MonoBehaviour {
     private bool[][] autoClickAbility = {new bool[] {true , false, false}, // true если здание может совершать автоклик
                                          new bool[] {true, true, true} };  // true если здание может совершать автоклик вданный момент
 
+    private int handClickPowerUp = 1;
+
     public Text scoreText;//счетчик текущего счета
     public GameObject ShopMenu; //Панель меню
     public GameObject[] Businesses = new GameObject[3];//массив самих зданий
@@ -31,7 +33,7 @@ public class Game : MonoBehaviour {
         if (isPurchased[number])
         {
             //если здание куплено, то нам доступен бизнес и можем получить деньги.
-            money += points[number]*levels[number];
+            money += points[number]*levels[number] * handClickPowerUp;
             scoreText.text = money + "$";
         }
     }
@@ -105,7 +107,7 @@ public class Game : MonoBehaviour {
             if (autoClickAbility[0][i] && autoClickAbility[1][i]) StartCoroutine(AutoClick(i));
     }
     
-    //функция ускоряючая автоклик (mod == 1 в 100 раз быстрее на 30с mod == something в 10 раз быстрее на 5 мин)
+    //функция ускоряючая автоклик (mod == 0 в 100 раз быстрее на 30с mod == something в 10 раз быстрее на 5 мин)
     private IEnumerator AutoClickSpeedUp(int mod)
     {
         int multiplier = 0;
@@ -124,6 +126,26 @@ public class Game : MonoBehaviour {
         for (int i = 0; i < baseClickPeriod.Length; i++) baseClickPeriod[i] /= multiplier;
         yield return new WaitForSeconds(time);
         for (int i = 0; i < baseClickPeriod.Length; i++) baseClickPeriod[i] *= multiplier;
+    }
+    //функция усиляющая клик (mod == 0 в 5 раз  на 10мин mod == something в 3 раз быстрее на 20мин)
+    private IEnumerator ClickPowerUp(int mod)
+    {
+        int multiplier = 0;
+        int time = 0;
+        if (mod == 0)
+        {
+            multiplier = 5;
+            time = 600;
+        }
+        else
+        {
+            multiplier = 3;
+            time = 1800;
+        }
+
+        handClickPowerUp *= multiplier;
+        yield return new WaitForSeconds(time);
+        handClickPowerUp /= multiplier;
     }
     
 }
