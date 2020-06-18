@@ -17,7 +17,7 @@ public class Game : MonoBehaviour {
     private int[] points = { 1, 10, 200, 2000, 7500, 15000, 50000, 200000 }; //количество монет за нажатие на здание
     private bool[] isPurchased = { true, false, false, false ,false ,false, false, false}; //true если здание под индексом i приобретено
     //costs и isPurchased те включают в себя самое первое здание.
-    private float[] baseClickPeriod = { 1, 5, 10 };//время Автоклика в сикундах
+    private float[] baseClickPeriod = { 1, 5, 10, 20, 30, 45, 90, 150};//время Автоклика в сикундах
     private bool[] autoClickAbility =  {true, true, true, true, true, true, true, true} ;  // true если здание может совершать автоклик вданный момент
 
     private int handClickPowerUp = 1;
@@ -31,9 +31,16 @@ public class Game : MonoBehaviour {
         for (int i = 0; i < Businesses.Length; ++i)
         {
             Businesses[i].GetComponentInChildren<Text>().text = points[i] + "$";
+            if (!isPurchased[i]) Businesses[i].GetComponent<Image>().color = Color.grey;
+            else Businesses[i].GetComponent<Image>().color = Color.cyan;
         }
     }
 
+    public void AddMoney(int count)
+    {
+        money += count;
+        scoreText.text = money + "$";
+    }
     public void OnClick(int number)
     {
 
@@ -42,8 +49,8 @@ public class Game : MonoBehaviour {
         if (isPurchased[number])
         {
             //если здание куплено, то нам доступен бизнес и можем получить деньги.
-            money += points[number]*levels[number] * handClickPowerUp;
-            scoreText.text = money + "$";
+            AddMoney( points[number]*levels[number] * handClickPowerUp);
+            
         }
     }
 
@@ -57,11 +64,12 @@ public class Game : MonoBehaviour {
                 //меняем цвет здания, которое покупаем и отмечаем, что купили его
                 Businesses[number].GetComponent<Image>().color = Businesses[0].GetComponent<Image>().color;
                 isPurchased[number] = true;
+                Businesses[number].GetComponent<Image>().color = Color.cyan;
                 // позволяем зданию совершать автоклик в момент покупки
                
             }
-            money -= costs[number];//отнимаем с текущего счета деньги за здание
-            scoreText.text = money + "$"; //показываем текущий счет
+            AddMoney(-costs[number]);//отнимаем с текущего счета деньги за здание
+            
             levels[number]++;//увеличиваем уровень
             costs[number] =(int)(Base[number] * Math.Pow(1.10, levels[number]));//по формуле считаем сумму для следующего апгрейда
             
@@ -111,7 +119,7 @@ public class Game : MonoBehaviour {
     private void FixedUpdate()
     {
         //пробегаемся по всем зданиям если оно может сделать автоклик вообще (autoClickAbility[0][i])
-        //и может сделать автоклик в данный момент autoClickAbility[1][i] запускаем coroutine
+        //и может сделать автоклик в данный момент autoClickAbility[i] запускаем coroutine
         for (int i = 0; i < isPurchased.Length; i++)
             if (isPurchased[i] && autoClickAbility[i]) StartCoroutine(AutoClick(i));
     }
