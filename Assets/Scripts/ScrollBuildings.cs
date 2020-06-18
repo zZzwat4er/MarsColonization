@@ -20,19 +20,61 @@ public class ScrollBuildings : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
-  
+
+        
         pos = new float[transform.childCount];//берем позиции зданий
         float distance = 1f / (pos.Length - 1f);
         for (int i = 0; i < pos.Length; ++i)
         {
             pos[i] = distance * i; //высчитываем дистанции
         }
+        if (Input.GetMouseButton(0))
+        {
+            /*
+             * Если мы тыкаем по экрану, то нам надо будет отсчитывать текущее здание, на которое надо перевести
+             * курсор
+             * 
+             */
+            scroll_pos = scrollbar.GetComponent<Scrollbar>().value;//берем координта скрола
+            float left_distance, right_distance;//хранят растояние до соседних зданий
+            bool left = false, right = false;//true если ближе
 
-        float cpos = scrollbar.GetComponent<Scrollbar>().value;
-        if (cpos != pos[current_building])
-            scrollbar.GetComponent<Scrollbar>().value =
-                Mathf.Lerp(scrollbar.GetComponent<Scrollbar>().value, pos[current_building], 0.1f);//плавно скролит до здания
-        
+            float c_position = Math.Abs(pos[current_building] - scroll_pos);//растояние от скрола до текущего здания
+            if (current_building > 0)
+            {
+                left_distance = Math.Abs(scroll_pos - pos[current_building - 1]);
+                if (left_distance < c_position)
+                {
+                    left = true;
+                    current_building--;
+                    
+                    //если мы ближе к левому зданию, то переключаемся на него
+                }
+
+            }
+
+            if (current_building < pos.Length - 1 && !left)
+            {
+                right_distance = Math.Abs(pos[current_building + 1] - scroll_pos);
+                if (right_distance < c_position)
+                {
+                    right = true;
+                    current_building++;
+                    //если мы ближе к правому зданию, то переключаемся на него
+                }
+            }
+
+           
+            
+        }
+        else
+        {
+            float cpos = scrollbar.GetComponent<Scrollbar>().value;
+            if (cpos != pos[current_building])
+                scrollbar.GetComponent<Scrollbar>().value =
+                    Mathf.Lerp(scrollbar.GetComponent<Scrollbar>().value, pos[current_building],
+                        0.1f); //плавно скролит до здания
+        }
 
     }
 
