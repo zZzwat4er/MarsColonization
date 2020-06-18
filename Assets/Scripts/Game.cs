@@ -34,7 +34,6 @@ public class Game : MonoBehaviour {
             money += points[number]*levels[number];
             scoreText.text = money + "$";
         }
-
     }
 
     public void buyBusiness(int number)
@@ -105,4 +104,26 @@ public class Game : MonoBehaviour {
         for (int i = 0; i < autoClickAbility[0].Length; i++)
             if (autoClickAbility[0][i] && autoClickAbility[1][i]) StartCoroutine(AutoClick(i));
     }
+    
+    //функция ускоряючая автоклик (mod == 1 в 100 раз быстрее на 30с mod == something в 10 раз быстрее на 5 мин)
+    private IEnumerator AutoClickSpeedUp(int mod)
+    {
+        int multiplier = 0;
+        int time = 0;
+        if (mod == 0)
+        {
+            multiplier = 100;
+            time = 30;
+        }
+        else
+        {
+            multiplier = 10;
+            time = 300;
+        }
+
+        for (int i = 0; i < baseClickPeriod.Length; i++) baseClickPeriod[i] /= multiplier;
+        yield return new WaitForSeconds(time);
+        for (int i = 0; i < baseClickPeriod.Length; i++) baseClickPeriod[i] *= multiplier;
+    }
+    
 }
