@@ -3,16 +3,19 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using System;
+using UnityEngine.UIElements;
+using Button = UnityEngine.UI.Button;
+using Image = UnityEngine.UI.Image;
 
 public class Game : MonoBehaviour {
 
     private int money = 0, point = 1;
 
-    private int[] Base = { 100, 1000, 10000 };//базовая цена за здание
-    private int[] costs = { 100, 1000, 10000 }; //цены за здания
-    private int[] levels = { 1, 0, 0 }; //уровни зданий
-    private int[] points = { 5, 50, 500 }; //количество монет за нажатие на здание
-    private bool[] isPurchased = { true, false, false }; //true если здание под индексом i приобретено
+    private int[] Base = { 50, 100, 1500, 5000, 10000, 15000, 50000, 100000};//базовая цена за здание
+    private int[] costs = { 50, 100, 1500, 5000, 10000, 15000, 50000, 100000 }; //цены за здания
+    private int[] levels = { 1, 0, 0 , 0, 0, 0, 0, 0}; //уровни зданий
+    private int[] points = { 1, 10, 200, 2000, 7500, 15000, 50000, 200000 }; //количество монет за нажатие на здание
+    private bool[] isPurchased = { true, false, false, false ,false ,false, false, false  }; //true если здание под индексом i приобретено
     //costs и isPurchased те включают в себя самое первое здание.
     private float[] baseClickPeriod = { 1, 5, 10 };//время Автоклика в сикундах
     private bool[] autoClickAbility =  {true, true, true} ;  // true если здание может совершать автоклик вданный момент
@@ -21,8 +24,15 @@ public class Game : MonoBehaviour {
 
     public Text scoreText;//счетчик текущего счета
     public GameObject ShopMenu; //Панель меню
-    public GameObject[] Businesses = new GameObject[3];//массив самих зданий
+    public GameObject[] Businesses;//массив самих зданий
 
+    public void Start()
+    {
+        for (int i = 0; i < Businesses.Length; ++i)
+        {
+            Businesses[i].GetComponentInChildren<Text>().text = points[i] + "$";
+        }
+    }
 
     public void OnClick(int number)
     {
