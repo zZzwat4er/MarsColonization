@@ -15,7 +15,7 @@ public class Game : MonoBehaviour {
     private int[] costs = { 50, 100, 1500, 5000, 10000, 15000, 50000, 100000 }; //цены за здания
     private int[] levels = { 1, 0, 0 , 0, 0, 0, 0, 0}; //уровни зданий
     private int[] points = { 1, 10, 200, 2000, 7500, 15000, 50000, 200000 }; //количество монет за нажатие на здание
-    private bool[] isPurchased = { true, false, false, false ,false ,false, false, false}; //true если здание под индексом i приобретено
+    private bool[] isPurchased = { false, false, false, false ,false ,false, false, false}; //true если здание под индексом i приобретено
     //costs и isPurchased те включают в себя самое первое здание.
     private float[] baseClickPeriod = { 1, 5, 10, 20, 30, 45, 90, 150};//время Автоклика в сикундах
     private bool[] autoClickAbility =  {true, true, true, true, true, true, true, true} ;  // true если здание может совершать автоклик вданный момент
@@ -86,23 +86,7 @@ public class Game : MonoBehaviour {
         if (!ShopMenu.activeSelf)
         {
             //если мы открываем меню, то нам надо обновить значения кнопок
-            Button[] buttons = ShopMenu.GetComponentsInChildren<Button>();
-            
-            for (int i = 0; i < buttons.Length; ++i)
-            {
-                Debug.Log(buttons[i].GetComponentInChildren<Text>().text);
-                if (isPurchased[i])
-                {
-                    //если здание куплено, то отображаем, что можем улучшить
-                    buttons[i].GetComponentInChildren<Text>().text = "Улучшить уровень за " + costs[i] + "$";
-                    
-                }
-                else
-                {
-                    //если не куплен, то отображаем, что можем купить
-                    buttons[i].GetComponentInChildren<Text>().text = "Купить бизнес за " + costs[i] + "$";
-                }
-            }
+                
         }
 
         ShopMenu.SetActive(!ShopMenu.activeSelf);//скрываем или показываем меню
