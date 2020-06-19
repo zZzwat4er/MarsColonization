@@ -6,6 +6,7 @@ using System;
 using UnityEngine.UIElements;
 using Button = UnityEngine.UI.Button;
 using Image = UnityEngine.UI.Image;
+using Random = System.Random;
 
 public class Game : MonoBehaviour {
 
@@ -45,7 +46,6 @@ public class Game : MonoBehaviour {
     {
 
         //при клике на кликер, будет увеличиваться счет монеток
-    
         if (isPurchased[number])
         {
             //если здание куплено, то нам доступен бизнес и можем получить деньги.
@@ -125,7 +125,7 @@ public class Game : MonoBehaviour {
     }
     
     //функция ускоряючая автоклик (mod == 0 в 100 раз быстрее на 30с mod == something в 10 раз быстрее на 5 мин)
-    private IEnumerator AutoClickSpeedUp(int mod)
+    /*private IEnumerator AutoClickSpeedUp(int mod)
     {
         int multiplier = 0;
         int time = 0;
@@ -143,26 +143,84 @@ public class Game : MonoBehaviour {
         for (int i = 0; i < baseClickPeriod.Length; i++) baseClickPeriod[i] /= multiplier;
         yield return new WaitForSeconds(time);
         for (int i = 0; i < baseClickPeriod.Length; i++) baseClickPeriod[i] *= multiplier;
-    }
-    //функция усиляющая клик (mod == 0 в 5 раз  на 10мин mod == something в 3 раз быстрее на 20мин)
-    private IEnumerator ClickPowerUp(int mod)
+    }*/
+    
+    
+    /*
+     * eventType = true/false = хорошое/плохое событие соответственно.
+     * eventMod:
+     *     0) полная остановка или удвоение эфективности на 10 мин (Вероятно изменение именно приносимых денег)
+     *     1) Снижение/Увеличение производительности двух построек на 30% на 20 минут
+     *     2) Уменьшение/Увеличение позитивных модификаторов зданий в 2 раза (необходима система модификаций)
+     *     3) +/- 5% от текущей сумы денег
+     *     4) удвоение/полное исчизновение "наркотиков" (Требуется имплементация "наркотиков")
+     *     5) октулючить все постройки на 100 тапов(пока хз как сделать каунтер) или усиление тапа в 5 раз на 30 сек
+     *     6) Уменьшение шанса позитивного события на 10, 15, 20% (только если eventType == false)
+     * todo: тригер для системы эвентов (всплывающее окно с сообщением о том что произощел эвент)
+    */
+    private IEnumerator playEvent(bool eventType, int eventMod)
     {
-        int multiplier = 0;
+        float modification = 0f;
         int time = 0;
-        if (mod == 0)
+        Random rnd = new Random(DateTime.Now.Millisecond);
+        switch (eventMod)
         {
-            multiplier = 5;
-            time = 600;
+            case 0:
+                int buildingId = rnd.Next(0, Businesses.Length);
+                while(!isPurchased[buildingId]) buildingId = rnd.Next(0, Businesses.Length);
+                modification = points[buildingId];
+                time = 600;
+                points[buildingId] += (eventType)? (int)modification : -(int)modification;
+                yield return new WaitForSeconds(time);
+                points[buildingId] = (int)modification;
+                break;
+            case 1:
+                int building1Id = rnd.Next(0, Businesses.Length);
+                int building2Id = rnd.Next(0, Businesses.Length);
+                while(!isPurchased[building1Id]) building1Id = rnd.Next(0, Businesses.Length);
+                while(!isPurchased[building2Id] && building1Id == building2Id) building2Id = rnd.Next(0, Businesses.Length);
+                modification = 0.3f;
+                time = 1200;
+                points[building1Id] += points[building1Id] * ((eventType)? (int)modification : -(int)modification);
+                points[building2Id] += points[building2Id] * ((eventType)? (int)modification : -(int)modification);
+                yield return new WaitForSeconds(time);
+                points[building1Id] -= points[building1Id] * ((eventType)? (int)modification : -(int)modification);
+                points[building2Id] -= points[building2Id] * ((eventType)? (int)modification : -(int)modification);
+                break;
+            case 2:
+                //todo: система модификаций зданий
+                break;
+            case 3:
+                modification = ((eventType)? (float)(money * 0.05) : (float)(-money * 0.05));
+                AddMoney((int)modification);
+                break;
+            case 4:
+                //todo: "наркотики"
+                break;
+            case 5:
+                if (eventType)
+                {
+                    modification = 5;
+                    time = 30; 
+                    handClickPowerUp *= (int)modification;
+                    yield return new WaitForSeconds(time);
+                    handClickPowerUp /= (int)modification;
+                }
+                else
+                {
+                    //todo: click counter
+                }
+                break;
+            case 6:
+                if (!eventType)
+                {
+                    rnd.Next(2, 5);
+                    //todo: risk system
+                }
+                break;
+            default:
+                break;
         }
-        else
-        {
-            multiplier = 3;
-            time = 1800;
-        }
-
-        handClickPowerUp *= multiplier;
-        yield return new WaitForSeconds(time);
-        handClickPowerUp /= multiplier;
     }
     
 }

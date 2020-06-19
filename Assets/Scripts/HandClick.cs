@@ -6,7 +6,8 @@ using UnityEngine.UI;
 public class HandClick : MonoBehaviour
 {
     public Button HandClickButton;
-
+    public static int handClickPower = 1;
+    
     private int money = 1;//деньги за тык
 
     private float time_to_wait = 0.2f;//время на обновление кнопки 
@@ -23,7 +24,7 @@ public class HandClick : MonoBehaviour
     {
         if (!is_active)
         {
-            GetComponent<Game>().AddMoney(money);
+            GetComponent<Game>().AddMoney(money * handClickPower);
             
             StartCoroutine(Waiting());
         }
