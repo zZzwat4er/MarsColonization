@@ -18,7 +18,9 @@ namespace Game_Classes
         private const float exp = 1.15f;
         private int lvl;
         private float coef, spec_coef;
-
+        public BigInteger nextManagerCost;
+        public int upgradeCount = 0;
+        
         public BigInteger nextIncome()
         {
             return (BigInteger) (base_income *
@@ -27,6 +29,7 @@ namespace Game_Classes
         }
         public Building(string name, BigInteger baseCost, BigInteger baseIncome, float baseTime, float baseRisk, Building dependent = null)
         {
+            this.nextManagerCost = baseCost;
             this.time = baseTime;
             this.isAvaliable = false;
             this.next_cost = baseCost;

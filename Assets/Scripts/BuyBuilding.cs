@@ -17,7 +17,8 @@ public class BuyBuilding : MonoBehaviour
             _.GPerSecond = 0;
             for (int i = 0; i < _.NumberOfBuildings; ++i)
             {
-                _.GPerSecond += (((BigFloat) (_.Buildings[i].Income)) / (BigInteger) (_.Buildings[i].baseTime));
+                _.GPerSecond += (_.Buildings[i].Income /(BigInteger) (_.Buildings[i].Time_ * 100))*100;
+                print(_.GPerSecond + "-> " + _.Buildings[i].Income + " / " +_.Buildings[i].Time_ );
             }
 
             _.Buildings[_.CurrentBuilding].IsAvaliable = true;

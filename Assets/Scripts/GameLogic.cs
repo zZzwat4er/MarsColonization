@@ -62,6 +62,10 @@ public class GameLogic : MonoBehaviour
     [SerializeField] private GameObject last, current, next;//фантомный вспомогательные здания
     [SerializeField] private GameObject buildings_panel;
     [SerializeField] private int number_of_buildings;//количество зданий
+
+    [Header("Инфа на менеджера")] 
+    [SerializeField] private Text headManagerText, infoManageText;
+    [SerializeField] private Button manageButton;
     
     //переменные для работы и совершения вычислений
     private int current_building = 0;
@@ -70,7 +74,7 @@ public class GameLogic : MonoBehaviour
     
     void Awake()
     {
-        money = 9666666666;
+        money = 10000000000000000000;
         _buildings = new Building[number_of_buildings];
         
         current_building = 0;
@@ -102,16 +106,37 @@ public class GameLogic : MonoBehaviour
 
     public void update_info()
     {
+        /*изменения зданий*/
         NameText.text = _buildings[current_building].Name;
         MoneyText.text = _buildings[current_building].Income + "G";
-        TimeText.text = "в течении " + _buildings[current_building].baseTime + " секунд";
+        TimeText.text = "в течении " + _buildings[current_building].Time_ + " секунд";
         MonetsText.text = (new BigFloat(money)).Round().ToString() + "G";
         HeadText.text = (_buildings[current_building].IsAvaliable ? "Улучшить " : "Купить ");
         
         lvlText.text = _buildings[current_building].Lvl + " lvl.";
         InfoText.text = "Цена: " + _buildings[current_building].NextCost + "G\n" +
                         _buildings[current_building].nextIncome() + "G / " + _buildings[current_building].Time_ + " s";
+
+        if (money < _buildings[current_building].NextCost)
+        {
+            BuyButton.GetComponent<Button>().interactable = false;
+        }
+        else
+        {
+            BuyButton.GetComponent<Button>().interactable = true;
+        }
         
+        /*ИЗМЕНЕНИЕ МЕНЕДЖЕРА*/
+        infoManageText.text = "Время: -1%\nЦена: " + _buildings[current_building].nextManagerCost;
+        if (money >= _buildings[current_building].nextManagerCost && _buildings[current_building].Lvl >= 10 && 
+            _buildings[current_building].upgradeCount < 99 && _buildings[current_building].IsAvaliable)
+        {
+            manageButton.GetComponent<Button>().interactable = true;
+        }
+        else
+        {
+            manageButton.GetComponent<Button>().interactable = false;
+        }
     }
 
     public void Move(int count)
