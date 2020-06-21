@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using DG.Tweening;
 
 public class ScrollBuildings : MonoBehaviour
 {
@@ -14,6 +15,8 @@ public class ScrollBuildings : MonoBehaviour
     private float[] pos;//позиции всех зданий
     
     private int current_building = 0;
+
+    
     // Start is called before the first frame update
  
 
@@ -69,11 +72,12 @@ public class ScrollBuildings : MonoBehaviour
         }
         else
         {
-            float cpos = scrollbar.GetComponent<Scrollbar>().value;
+            scrollbar.GetComponent<Scrollbar>().DOGoto(pos[current_building]);
+            /*float cpos = scrollbar.GetComponent<Scrollbar>().value;
             if (cpos != pos[current_building])
                 scrollbar.GetComponent<Scrollbar>().value =
                     Mathf.Lerp(scrollbar.GetComponent<Scrollbar>().value, pos[current_building],
-                        0.1f); //плавно скролит до здания
+                        0.1f); //плавно скролит до здания*/
         }
 
     }

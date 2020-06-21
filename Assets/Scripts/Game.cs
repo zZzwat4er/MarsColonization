@@ -13,7 +13,7 @@ public class Game : MonoBehaviour {
 
     private int[] Base = { 50, 100, 1500, 5000, 10000, 15000, 50000, 100000};//базовая цена за здание
     private int[] costs = { 50, 100, 1500, 5000, 10000, 15000, 50000, 100000 }; //цены за здания
-    private int[] levels = { 1, 0, 0 , 0, 0, 0, 0, 0}; //уровни зданий
+    private int[] levels = { 0, 0, 0 , 0, 0, 0, 0, 0}; //уровни зданий
     private int[] points = { 1, 10, 200, 2000, 7500, 15000, 50000, 200000 }; //количество монет за нажатие на здание
     private bool[] isPurchased = { false, false, false, false ,false ,false, false, false}; //true если здание под индексом i приобретено
     //costs и isPurchased те включают в себя самое первое здание.
@@ -57,7 +57,9 @@ public class Game : MonoBehaviour {
 
     public void buyBusiness(int number)
     {
-        
+        Debug.Log(number);
+        Debug.Log("########################################"+number);
+        Debug.Log(number);
         if(money >= costs[number])
         {
             if (!isPurchased[number]) // если здание ранее не покупалось
@@ -74,11 +76,17 @@ public class Game : MonoBehaviour {
             levels[number]++;//увеличиваем уровень
             costs[number] =(int)(Base[number] * Math.Pow(1.10, levels[number]));//по формуле считаем сумму для следующего апгрейда
             
-            ShopMenu.GetComponentsInChildren<Button>()[number].GetComponentInChildren<Text>().text = "Улучшить уровень за " + costs[number] + "$"; //обновляем текст в магазине
             Businesses[number].GetComponentInChildren<Text>().text = points[number] * levels[number] + "$"; //обновляем кнопку, которая показывает прибыль за тык
+            
+            GameObject.Find("BuildingsPanel").GetComponentInChildren<ShopBuildings>().update_info();
         }
     }
 
+    public int[] get_info(int num)
+    {
+        //функция чтобы из вне получить информацию об определенном здании
+        return new int[] { (isPurchased[num]? 1:0), costs[num], levels[num], points[num],(int) baseClickPeriod[num]} ;
+    }
 
     public void show_hide_menu()
     {
