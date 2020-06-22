@@ -13,6 +13,8 @@ public class BuyBuilding : MonoBehaviour
         if (_.Money >= _.Buildings[_.CurrentBuilding].NextCost)
         {
             _.Money -= _.Buildings[_.CurrentBuilding].NextCost;
+            Statistics.totalSpendG += _.Buildings[_.CurrentBuilding].NextCost;
+            Statistics.totalSpendGAfterReset += _.Buildings[_.CurrentBuilding].NextCost;
             _.Buildings[_.CurrentBuilding].upgrade();
             _.GPerSecond = 0;
             for (int i = 0; i < _.NumberOfBuildings; ++i)
