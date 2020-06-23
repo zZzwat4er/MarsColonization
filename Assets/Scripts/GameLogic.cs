@@ -8,12 +8,14 @@ using UnityEngine.UI;
 using Quaternion = UnityEngine.Quaternion;
 using Vector3 = UnityEngine.Vector3;
 using Game_Classes;
+using UnityEngine.Assertions.Must;
 
 public class GameLogic : MonoBehaviour
 {
     //Нужные объекты
     private GameObject[] buildingsImage;//массив зданий, количество регулерутеся переменой number_of_buildings
     private Building[] _buildings; //сами объекты зданий
+    
     
     
     /*Информция о зданиях
@@ -69,10 +71,13 @@ public class GameLogic : MonoBehaviour
     
     void Awake()
     {
-        money = 10000000000000000000;
-        _buildings = new Building[number_of_buildings];
         
-        current_building = 0;
+        /*Тут инициализируем объекты и создаем здания*/
+        
+        money = 0;//инициализация денег
+        _buildings = new Building[number_of_buildings];//инициализация здания
+        
+        current_building = 0;//ставим текущие здание как 0
         buildingsImage = new GameObject[number_of_buildings];//инициализируем
             //Создаем самое первое здание, которое будет стоять по середине экрана
         buildingsImage[0] = Instantiate(current, current.transform.position, Quaternion.identity);
@@ -88,12 +93,17 @@ public class GameLogic : MonoBehaviour
             
             //Инициализируем наши объекты зданий
             _buildings[i] = new Building(names[i], base_cost[i], base_income[i], base_time[i], risks[i]);
+            
+            
+            //прикручиваем прогресс бары нашим зданиям
+            // buildingsImage[i].GetComponentInChildren<Image>().transform.localScale = Vector3.zero;
+            
         }
         
-
+    // Это зависимости для специальных апгрейдов
         for (int i = 0; i < number_of_buildings; ++i)
             _buildings[i].Dependent = (depedents[i] == -1 ? null : _buildings[depedents[i]]);
-
+        
         update_info();
     }
 
@@ -101,23 +111,28 @@ public class GameLogic : MonoBehaviour
 
     public void update_info()
     {
-        /*изменения зданий*/
-        NameText.text = _buildings[current_building].Name;
-        MoneyText.text = _buildings[current_building].Income + "G";
-        TimeText.text = "в течении " + _buildings[current_building].Time_ + " секунд";
-        MonetsText.text = (new BigFloat(money)).Round().ToString() + "G";
-        HeadText.text = (_buildings[current_building].IsAvaliable ? "Улучшить " : "Купить ");
+        //Функция обновляют всю информацию игры
+        //Ее нужно всегда вызывать после всяческих изменений
         
-        lvlText.text = _buildings[current_building].Lvl + " lvl.";
+        /*изменения зданий*/
+        NameText.text = _buildings[current_building].Name;//ставим имя
+        MoneyText.text = _buildings[current_building].Income + "G";//показываем доход со здания
+        TimeText.text = "в течении " + _buildings[current_building].Time_ + " секунд";//время за которое приходит доход
+        MonetsText.text = (new BigFloat(money)).Round().ToString() + "G";//Текущий счет
+        HeadText.text = (_buildings[current_building].IsAvaliable ? "Улучшить " : "Купить ");//кнопка для покупки здания
+        
+        lvlText.text = _buildings[current_building].Lvl + " lvl.";//показатель уровня
         InfoText.text = "Цена: " + _buildings[current_building].NextCost + "G\n" +
                         _buildings[current_building].nextIncome() + "G / " + _buildings[current_building].Time_ + " s";
 
         if (money < _buildings[current_building].NextCost)
         {
+            //если недостаточно денег на покупку/апгрейд здания, то выключаем кнопку
             BuyButton.GetComponent<Button>().interactable = false;
         }
         else
         {
+            //а тут наоборот включаем 
             BuyButton.GetComponent<Button>().interactable = true;
         }
         
@@ -132,6 +147,9 @@ public class GameLogic : MonoBehaviour
         {
             manageButton.GetComponent<Button>().interactable = false;
         }
+        
+   
+        
     }
 
     public void Move(int count)
@@ -143,10 +161,7 @@ public class GameLogic : MonoBehaviour
          */
         if (count == 0 || current_building + count < 0 || current_building+count >= number_of_buildings) return;
         if (buildingsImage[current_building].transform.position != current.transform.position) return;
-        
-        
-        
-        
+
         if (count > 0)
         {
             buildingsImage[current_building].transform.DOMove(last.transform.position, animation_duration);
@@ -166,6 +181,8 @@ public class GameLogic : MonoBehaviour
 
     public void handClick()
     {
+        
+        //при клике дается одна монетка
         money += 1;
         update_info();
         
@@ -173,25 +190,44 @@ public class GameLogic : MonoBehaviour
 
     private void FixedUpdate()
     {
+
+        //Здесь считаем прогресс дохода здания
+        if(_buildings[current_building].IsAvaliable)//если здание купелно, то
+        {
+            try
+            {
+                if (_buildings[current_building].Time_ < 0.6) //для того, чтобы анимация не была сильно быстрой, просто вырубаем ее
+                    buildingsImage[current_building].transform.GetChild(0).GetComponent<Image>().fillAmount = 1;
+                else
+                {
+                    //пытаемся вычислисть насколько оно завершило работу и отображаем это на прогресс бар
+                    buildingsImage[current_building].transform.GetChild(0).GetComponent<Image>().fillAmount =
+                        ((DateTime.Now.Ticks) - _buildings[current_building].startWorkAt.Ticks) /
+                        (_buildings[current_building].Time_ * 10000000);
+                }
+                
+
+            }
+            catch (Exception e)
+            {
+                //отлавливаем ошибки деления на ноль :) Всё норм, так и должно быть
+                print("неудачно");
+            }
+            
+        }
+
+        var tick = new TimeSpan(DateTime.Now.Ticks);//смотрим на текущий тик игры;
         for (int i = 0; i < number_of_buildings; ++i)
         {
-            if (!_buildings[i].isActive)
-            {
-                int x = i;
-                StartCoroutine(getMoney(x));//Сбор денег с здания
+            if (tick.Ticks >= _buildings[i].startWorkAt.Ticks + ((int) (_buildings[i].Time_ * 10000000f)))
+            { // если тик больше чем тик при старте работы здания + нужное время на роботу здания
+                money += _buildings[i].Income;
+                _buildings[i].startWorkAt = new TimeSpan(tick.Ticks);
+         
+                
             }
         }
     }
-
-    private IEnumerator getMoney(int index)
-    {
-        _buildings[index].isActive = true;
-        yield return new WaitForSeconds(_buildings[index].Time_);
-        money += _buildings[index].Income;
-        _buildings[index].isActive = false;
-        update_info();
-    }
-
-    
+        
 }
 

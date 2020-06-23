@@ -7,22 +7,23 @@ namespace Game_Classes
 {
     public class Building
     {
-        private string name;
-        public bool isActive = false;
-        private bool isAvaliable;
-        private BigInteger base_cost, next_cost;
-        private BigInteger base_income;
-        private BigInteger income;
-        private Building dependent;
-        private float base_time, time;
-        private float base_risk;
-        private const float exp = 1.15f;
-        private int lvl;
-        private float coef, spec_coef;
-        public BigInteger nextManagerCost;
-        public int upgradeCount = 0;
+        private string name; //Назвние здания
+        public bool isActive = false; //true если в процессе заработка денег
+        public TimeSpan startWorkAt; //время начала работы здания(нужно для прогресс бара)
+        private bool isAvaliable; //true ели куплено
+        private BigInteger base_cost, next_cost;//начальная цена, и цена на следующий апгрейд
+        private BigInteger base_income;//базовый доход
+        private BigInteger income;//доход на данный момент
+        private Building dependent;//здание от которого будет зависеть апгрейд
+        private float base_time, time; //базовое время на зароботок и текущие
+        private float base_risk; //базовый риск
+        private const float exp = 1.15f; //экспонента для апгрейда
+        private int lvl;//уровень здания
+        private float coef, spec_coef;//коэфициенты для подсчета прибыли с данного здания
+        public BigInteger nextManagerCost; //цена для покупки следующего менеджера
+        public int upgradeCount = 0;//сколько раз апргейднули менеджера
         
-        public BigInteger nextIncome()
+        public BigInteger nextIncome()//подсчет дохода при следующем апгрейде
         {
             return (BigInteger) (base_income *
                                  (BigInteger) (coef + spec_coef * (dependent == null ? 0 : (int) (dependent.lvl / 10))
