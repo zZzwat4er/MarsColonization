@@ -8,6 +8,7 @@ namespace Game_Classes
     public class Building
     {
         private string name;
+        public bool isActive = false;
         private bool isAvaliable;
         private BigInteger base_cost, next_cost;
         private BigInteger base_income;
@@ -29,7 +30,7 @@ namespace Game_Classes
         }
         public Building(string name, BigInteger baseCost, BigInteger baseIncome, float baseTime, float baseRisk, Building dependent = null)
         {
-            this.nextManagerCost = baseCost;
+            this.nextManagerCost = baseCost*10;
             this.time = baseTime;
             this.isAvaliable = false;
             this.next_cost = baseCost;

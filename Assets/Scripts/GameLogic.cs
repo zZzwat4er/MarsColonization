@@ -45,12 +45,7 @@ public class GameLogic : MonoBehaviour
         get => money;
         set => money = value;
     }
-    public BigFloat GPerSecond
-    {
-        get => gPerSecond;
-        set => gPerSecond = value;
-    }
-    
+
     
 
     [Header("Инфа здания")]
@@ -70,7 +65,7 @@ public class GameLogic : MonoBehaviour
     //переменные для работы и совершения вычислений
     private int current_building = 0;
     private BigFloat money= 0;
-    private BigFloat gPerSecond = 0;
+    
     
     void Awake()
     {
@@ -141,6 +136,11 @@ public class GameLogic : MonoBehaviour
 
     public void Move(int count)
     {
+        
+        /*
+         *    Скрол зданий с помощью плагина DoTween
+         * 
+         */
         if (count == 0 || current_building + count < 0 || current_building+count >= number_of_buildings) return;
         if (buildingsImage[current_building].transform.position != current.transform.position) return;
         
@@ -163,10 +163,6 @@ public class GameLogic : MonoBehaviour
         update_info();
     }
 
-    public void buyBuilding()
-    {
-       
-    }
 
     public void handClick()
     {
@@ -174,13 +170,28 @@ public class GameLogic : MonoBehaviour
         update_info();
         
     }
-    
-    // Update is called once per frame
-    void Update()
+
+    private void FixedUpdate()
     {
-        money += (gPerSecond * ((int) (Time.deltaTime * 1000000))) / 1000000;
-        update_info();
-        
+        for (int i = 0; i < number_of_buildings; ++i)
+        {
+            if (!_buildings[i].isActive)
+            {
+                int x = i;
+                StartCoroutine(getMoney(x));//Сбор денег с здания
+            }
+        }
     }
+
+    private IEnumerator getMoney(int index)
+    {
+        _buildings[index].isActive = true;
+        yield return new WaitForSeconds(_buildings[index].Time_);
+        money += _buildings[index].Income;
+        _buildings[index].isActive = false;
+        update_info();
+    }
+
+    
 }
 
