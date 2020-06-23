@@ -227,6 +227,7 @@ public class GameLogic : MonoBehaviour
                 
             }
         }
+        update_info();
     }
         
 }
