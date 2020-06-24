@@ -20,14 +20,6 @@ public class BuyManager : MonoBehaviour
             build.nextManagerCost *= multiplier;
             build.Time_ = build.baseTime - (build.baseTime / 100) * build.upgradeCount;
 
-            _.GPerSecond = 0;
-            BigFloat a = 0, b = 0;
-            for (int i = 0; i < _.NumberOfBuildings; ++i)
-            {
-                _.GPerSecond += (_.Buildings[i].Income /(BigInteger) (_.Buildings[i].Time_ * 100))*100;
-            }
-
-           
             
 
             
