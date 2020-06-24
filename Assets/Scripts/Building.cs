@@ -5,6 +5,7 @@ using static System.Math;
 
 namespace Game_Classes
 {
+    [Serializable]
     public class Building
     {
         private string name; //Назвние здания

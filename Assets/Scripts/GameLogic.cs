@@ -103,7 +103,15 @@ public class GameLogic : MonoBehaviour
     // Это зависимости для специальных апгрейдов
         for (int i = 0; i < number_of_buildings; ++i)
             _buildings[i].Dependent = (depedents[i] == -1 ? null : _buildings[depedents[i]]);
-        
+
+        Save save = SaveSystem.load();
+        if (save != null)
+        {
+            Debug.Log("save");
+            _buildings = save.buildings;
+            money = save.money;
+        }
+
         update_info();
     }
 
@@ -229,6 +237,18 @@ public class GameLogic : MonoBehaviour
         }
         update_info();
     }
-        
+    // функций вызываймая при закрытии приложения (в билде не работает. только в эдиторе)
+    private void OnApplicationQuit()
+    {
+        SaveSystem.save(this);
+    }
+    // функция вызываемая когда приложение встает на паузу (в андройде равносильно тому что его скрыли)
+    private void OnApplicationPause(bool pauseStatus)
+    {
+        if (pauseStatus)
+        {
+            SaveSystem.save(this);
+        }
+    }
 }
 
