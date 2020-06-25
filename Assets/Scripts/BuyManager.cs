@@ -12,11 +12,12 @@ public class BuyManager : MonoBehaviour
     {
         var _ = game_info.GetComponent<GameLogic>();
         var build = _.Buildings[_.CurrentBuilding];
-        if (_.Money >= build.nextManagerCost && build.Lvl >= 10 
-                                                                      && build.upgradeCount<99 && build.IsAvaliable)
+        if (_.Money >= build.nextManagerCost && build.Lvl >= 10 && build.upgradeCount<99 && build.IsAvaliable)
         {
             build.upgradeCount++;
             _.Money -= build.nextManagerCost;
+            Statistics.totalSpendG += build.nextManagerCost;
+            Statistics.totalSpendGAfterReset += build.nextManagerCost;
             build.nextManagerCost *= multiplier;
             build.Time_ = build.baseTime - (build.baseTime / 100) * build.upgradeCount;
 

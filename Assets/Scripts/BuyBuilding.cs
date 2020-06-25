@@ -15,6 +15,8 @@ public class BuyBuilding : MonoBehaviour
         if (_.Money >= _.Buildings[_.CurrentBuilding].NextCost)
         {//если достаточно денег, то проводим оперцию покупки здания
             _.Money -= _.Buildings[_.CurrentBuilding].NextCost;
+            Statistics.totalSpendG += _.Buildings[_.CurrentBuilding].NextCost;
+            Statistics.totalSpendGAfterReset += _.Buildings[_.CurrentBuilding].NextCost;
             _.Buildings[_.CurrentBuilding].upgrade();
             if (!_.Buildings[_.CurrentBuilding].IsAvaliable)
             {
