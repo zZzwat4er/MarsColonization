@@ -14,7 +14,5 @@ public class Statistics : MonoBehaviour
     {
         inGameTimeWhole += Time.deltaTime;
         inGameTimeAfetrReset += Time.deltaTime;
-        totalG += (_.GPerSecond * ((int) (Time.deltaTime * 1000000))) / 1000000;
-        totalGAfterReset += (_.GPerSecond * ((int) (Time.deltaTime * 1000000))) / 1000000;
     }
 }

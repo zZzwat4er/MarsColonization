@@ -103,13 +103,13 @@ public class GameLogic : MonoBehaviour
     // Это зависимости для специальных апгрейдов
         for (int i = 0; i < number_of_buildings; ++i)
             _buildings[i].Dependent = (depedents[i] == -1 ? null : _buildings[depedents[i]]);
-
+        //пробуем загрузить сейв и если он есть подкачиваем от туда инфу
         Save save = SaveSystem.load();
         if (save != null)
         {
-            Debug.Log("save");
             _buildings = save.buildings;
             money = save.money;
+            timeSkip(save.savedTime);
         }
 
         update_info();
@@ -230,6 +230,8 @@ public class GameLogic : MonoBehaviour
             if (tick.Ticks >= _buildings[i].startWorkAt.Ticks + ((int) (_buildings[i].Time_ * 10000000f)))
             { // если тик больше чем тик при старте работы здания + нужное время на роботу здания
                 money += _buildings[i].Income;
+                Statistics.totalG += _buildings[i].Income;
+                Statistics.totalGAfterReset += _buildings[i].Income;
                 _buildings[i].startWorkAt = new TimeSpan(tick.Ticks);
          
                 
@@ -248,6 +250,22 @@ public class GameLogic : MonoBehaviour
         if (pauseStatus)
         {
             SaveSystem.save(this);
+        }
+    }
+
+    private void timeSkip(DateTime savedTime)
+    {
+        double secondsSinceSave = DateTime.Now.Subtract(savedTime).TotalSeconds;
+        Debug.Log("Total inActive Time: " + secondsSinceSave);
+        for (int i = 0; i < number_of_buildings; i++)
+        {
+            int countOfTiks =  (int)(secondsSinceSave / Buildings[i].Time_);
+            if (countOfTiks > 0 && Buildings[i].IsAvaliable)
+            {
+                Debug.Log("Buildin " + i + " income: " + _buildings[i].Income * (int)(countOfTiks / 2));
+                Debug.Log("Buildin " + i + " Tiks: " + countOfTiks);
+                money += _buildings[i].Income * (int)(countOfTiks / 2);
+            }
         }
     }
 }
