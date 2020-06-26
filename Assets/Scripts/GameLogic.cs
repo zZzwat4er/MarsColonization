@@ -257,10 +257,13 @@ public class GameLogic : MonoBehaviour
             SaveSystem.save(this);
         }
     }
-
+    
+    //функция для скипа времени в игре
     private void timeSkip(DateTime savedTime)
     {
+        // высчитываем кол-во секунд с момента выключения игры
         double secondsSinceSave = DateTime.Now.Subtract(savedTime).TotalSeconds;
+        //проходим через все здания для выщита прибыли от здания за прошедшее время
         for (int i = 0; i < number_of_buildings; i++)
         {
             int countOfTiks =  (int)(secondsSinceSave / Buildings[i].Time_);

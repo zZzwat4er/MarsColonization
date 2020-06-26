@@ -9,6 +9,7 @@ public class Save{
     public Building[] buildings; // Массив зданий для сейва
     public BigInteger money; // Текущие деньги
     public DateTime savedTime;
+    //данные статистики
     public TimeSpan inGameTimeWhole, inGameTimeAfetrReset;
     public BigFloat totalG, totalGAfterReset, totalSpendG, totalSpendGAfterReset;
     //public HandClicker handClicker; TODO: раскоментить
