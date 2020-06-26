@@ -27,8 +27,8 @@ public class UpgradeHandClick : MonoBehaviour
     {
         // для _ берем информацию с объекта Game
         _ = gameInfo.GetComponent<GameLogic>();
-  
-        _handClicker = new HandClicker(_.Buildings);
+        if(_handClicker == null)
+            _handClicker = new HandClicker(_.Buildings);
         
         for (int i = 0; i < upgrades.Length; ++i)
         {

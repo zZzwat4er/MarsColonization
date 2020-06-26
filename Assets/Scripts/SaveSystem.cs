@@ -23,7 +23,7 @@ public static class SaveSystem
     public static Save load()
     {
         string path = Application.persistentDataPath + "/Save.game"; // путь до сейва
-        Debug.Log(path);
+        // Debug.Log(path);
         //если сейв есть то загружаем его если нет посылаем нулл
         if (File.Exists(path))
         {

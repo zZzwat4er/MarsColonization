@@ -8,19 +8,19 @@ namespace Game_Classes
     [Serializable]
     public class Building
     {
-        private string name; //Назвние здания
+        public string name; //Назвние здания
         public bool isActive = false; //true если в процессе заработка денег
         public TimeSpan startWorkAt; //время начала работы здания(нужно для прогресс бара)
-        private bool isAvaliable; //true ели куплено
-        private BigInteger base_cost, next_cost;//начальная цена, и цена на следующий апгрейд
-        private BigInteger base_income;//базовый доход
-        private BigInteger income;//доход на данный момент
-        private Building dependent;//здание от которого будет зависеть апгрейд
-        private float base_time, time; //базовое время на зароботок и текущие
-        private float base_risk; //базовый риск
-        private const float exp = 1.15f; //экспонента для апгрейда
-        private int lvl;//уровень здания
-        private float coef, spec_coef;//коэфициенты для подсчета прибыли с данного здания
+        public bool isAvaliable; //true ели куплено
+        public BigInteger base_cost, next_cost;//начальная цена, и цена на следующий апгрейд
+        public BigInteger base_income;//базовый доход
+        public BigInteger income;//доход на данный момент
+        public Building dependent;//здание от которого будет зависеть апгрейд
+        public float base_time, time; //базовое время на зароботок и текущие
+        public float base_risk; //базовый риск
+        public const float exp = 1.15f; //экспонента для апгрейда
+        public int lvl;//уровень здания
+        public float coef, spec_coef;//коэфициенты для подсчета прибыли с данного здания
         public BigInteger nextManagerCost; //цена для покупки следующего менеджера
         public int upgradeCount = 0;//сколько раз апргейднули менеджера
         

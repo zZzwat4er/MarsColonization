@@ -22,15 +22,16 @@ public class GameLogic : MonoBehaviour
      ******************************************************************/
     private BigInteger[] base_cost =
     {
-        50, 100, 1500, 5000, 10000, 15000, 50000, 100000, 250000, 1000000, 15000000, 50000000, 666666666,
+        100, 1200, 15000, 125000, 1500000, 20000000, 330000000, 5100000000, 75000000000, BigInteger.Parse("1000000000000"), 
+        BigInteger.Parse("14000000000000"), BigInteger.Parse("170000000000000"), BigInteger.Parse("2100000000000000"), 
         BigInteger.Parse("20000000000000000")
     }; //базовая цена за здание
     private BigInteger[] base_income =
     {
-        1, 10, 200, 2000, 7500, 15000, 50000, 200000, 500000, 1500000, 5000000, 30000000, 666666666,
-        BigInteger.Parse("10000000000")
+        1, 10, 60, 500, 1500, 8000, 44000, 250000, 1600000, 10000000, 65000000, 450000000, 3000000000, 20000000000
     };//базовый доход здания
-    private float[] base_time = { 1, 5, 10, 20, 30, 45, 90, 150, 200, 300, 500, 600, 900, 1200};//базове время для дохода
+
+    private float[] base_time = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,};//базове время для дохода
     private string[] names = { "Convenience Store", "Gas Station", "Chop Shop", "Pharmacy", "Gun Store", 
         "Lawyer Office", "Nightclub", "Laboratory", "Weapon Manufacture", "Police Station", "Red Mine", 
         "Governmental Building", "Gates of Hell", "Planet Core"};
@@ -72,6 +73,8 @@ public class GameLogic : MonoBehaviour
     
     void Awake()
     {
+        
+       
         
         /*Тут инициализируем объекты и создаем здания*/
         
@@ -121,6 +124,7 @@ public class GameLogic : MonoBehaviour
             Statistics.totalSpendGAfterReset = save.totalSpendGAfterReset;
             Statistics.inGameTimeWhole = save.inGameTimeWhole;
             Statistics.inGameTimeAfetrReset = save.inGameTimeAfetrReset;
+            return;
         }
 
         update_info();

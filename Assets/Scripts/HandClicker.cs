@@ -8,21 +8,21 @@ namespace Game_Classes
     [Serializable]
     public class HandClicker
     {
-        private BigInteger[] costs =
+        public BigInteger[] costs =
         {
             1000, 
             BigInteger.Parse("1000000000000000000000000000000000")
         };//цены на апгрейд хэндкликера
 
-        private string[] names = {"New Tricks", "Endgame"};//их названя
+        public string[] names = {"New Tricks", "Endgame"};//их названя
 
-        private int[] multipliers = {10,  100};//множитель для увеличения цены
+        public int[] multipliers = {10,  100};//множитель для увеличения цены
         
-        private int[] specCoef={0,  0};//специальный коэфициент для формулы
-        private int coef; // коэфициент для формулы
-        private BigInteger income; // доход с одного клика
-        private BigInteger base_income;//базовый доход (по идее не нужен, но в формуле есть)
-        private Building[] _buildings; //ссылки на здания
+        public int[] specCoef={0,  0};//специальный коэфициент для формулы
+        public int coef; // коэфициент для формулы
+        public BigInteger income; // доход с одного клика
+        public BigInteger base_income;//базовый доход (по идее не нужен, но в формуле есть)
+        public Building[] _buildings; //ссылки на здания
         
         
         public HandClicker(Building[] buildings)
@@ -43,7 +43,7 @@ namespace Game_Classes
 
             for (int i = 0; i < 14; ++i)
             {
-                Debug.Log(i + " " + specCoef[1]);
+                // Debug.Log(i + " " + specCoef[1]);
                 res += (specCoef[1] + (index == 1 ? 1 : 0)) * (_buildings[i].Lvl / 10);
             }
 
@@ -61,10 +61,10 @@ namespace Game_Classes
                 if (index == 0) coef++;
                 specCoef[index]++;
                 costs[index] *= multipliers[index];
-                Debug.Log("Куплено " + income);
+                // Debug.Log("Куплено " + income);
                 return costs[index]/multipliers[index];//возвращаем сколько мы потратили, если хватило денег
             }
-            Debug.Log("Не куплено");
+            // Debug.Log("Не куплено");
             return 0;//возвращаем 0 если не хватило денег
         }
         
