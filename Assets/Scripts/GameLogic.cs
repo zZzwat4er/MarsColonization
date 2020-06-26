@@ -231,6 +231,37 @@ public class GameLogic : MonoBehaviour
         
         update_info();
     }
+    
+    
+    // функций вызываймая при закрытии приложения (в билде не работает. только в эдиторе)
+    private void OnApplicationQuit()
+    {
+        SaveSystem.save(this);
+    }
+    // функция вызываемая когда приложение встает на паузу (в андройде равносильно тому что его скрыли)
+    private void OnApplicationPause(bool pauseStatus)
+    {
+        if (pauseStatus)
+        {
+            SaveSystem.save(this);
+        }
+    }
+
+    private void timeSkip(DateTime savedTime)
+    {
+        double secondsSinceSave = DateTime.Now.Subtract(savedTime).TotalSeconds;
+        Debug.Log("Total inActive Time: " + secondsSinceSave);
+        for (int i = 0; i < number_of_buildings; i++)
+        {
+            int countOfTiks =  (int)(secondsSinceSave / Buildings[i].Time_);
+            if (countOfTiks > 0 && Buildings[i].IsAvaliable)
+            {
+                Debug.Log("Buildin " + i + " income: " + _buildings[i].Income * (int)(countOfTiks / 2));
+                Debug.Log("Buildin " + i + " Tiks: " + countOfTiks);
+                money += _buildings[i].Income * (int)(countOfTiks / 2);
+            }
+        }
+    }
         
 }
 
