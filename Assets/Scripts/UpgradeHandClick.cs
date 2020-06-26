@@ -13,7 +13,13 @@ public class UpgradeHandClick : MonoBehaviour
     private HandClicker _handClicker;//наш хэндкликер
     
 
-    public HandClicker HandClicker => _handClicker;//геттер
+  
+
+    public HandClicker HandClicker
+    {
+        get => _handClicker;
+        set => _handClicker = value;
+    }
 
     [SerializeField] private Button[] upgrades;
 
@@ -40,7 +46,7 @@ public class UpgradeHandClick : MonoBehaviour
         update_info();//обновление кнопок хэндкликера
     }
 
-    private void update_info()
+    public void update_info()
     {
         //обновления менюшки кликера
         for (int i = 0; i < upgrades.Length; ++i)

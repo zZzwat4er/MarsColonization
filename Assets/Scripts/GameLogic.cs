@@ -110,10 +110,12 @@ public class GameLogic : MonoBehaviour
         {
             _buildings = save.buildings;
             money = save.money;
+            //GetComponent<UpgradeHandClick>().HandClicker = save.handClicker; TODO: раскоментить
             timeSkip(save.savedTime);
         }
 
         update_info();
+        
     }
 
    
@@ -150,6 +152,8 @@ public class GameLogic : MonoBehaviour
         //информация по хэнд кликеру
         if( GetComponent<UpgradeHandClick>().HandClicker!= null)
             handClickInfoText.text ="+ " + GetComponent<UpgradeHandClick>().HandClicker.Income + "G";
+        GetComponent<UpgradeHandClick>().update_info();
+        
 
     }
 

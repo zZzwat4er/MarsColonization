@@ -3,6 +3,7 @@ using UnityEngine;
 using System.IO;
 using System.Numerics;
 using System.Runtime.Serialization.Formatters.Binary;
+using Game_Classes;
 
 
 public static class SaveSystem 
@@ -15,7 +16,7 @@ public static class SaveSystem
         string path = Application.persistentDataPath + "/Save.game"; // путь до сейва
         FileStream stream = new FileStream(path, FileMode.Create);// создаем файл для сейва
         // запись сейва в созданый файл
-        formatter.Serialize(stream, new Save(gameLogic.Buildings, gameLogic.Money, DateTime.Now));
+        formatter.Serialize(stream, new Save(gameLogic.Buildings, gameLogic.Money, DateTime.Now));// gameLogic.GetComponent<UpgradeHandClick>().HandClicker)); TODO: раскоментить
         stream.Close(); // закрываем файл
     }
     // загрузка
