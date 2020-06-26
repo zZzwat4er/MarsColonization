@@ -42,7 +42,7 @@ public class GameLogic : MonoBehaviour
     public Building[] Buildings => _buildings; 
     public int NumberOfBuildings => number_of_buildings; 
     public int CurrentBuilding => current_building;
-    public BigFloat Money
+    public BigInteger Money
     {
         get => money;
         set => money = value;
@@ -60,13 +60,14 @@ public class GameLogic : MonoBehaviour
     [SerializeField] private GameObject buildings_panel;
     [SerializeField] private int number_of_buildings;//количество зданий
 
-    [Header("Инфа на менеджера")] 
-    [SerializeField] private Text headManagerText, infoManageText;
-    [SerializeField] private Button manageButton;
-    
-    //переменные для работы и совершения вычислений
+
+
+    [Header("Инфа hand кликера")] [SerializeField]
+    private Text handClickInfoText;
+
+        //переменные для работы и совершения вычислений
     private int current_building = 0;
-    private BigFloat money= 0;
+    private BigInteger money= 0;
     
     
     void Awake()
@@ -124,13 +125,13 @@ public class GameLogic : MonoBehaviour
         
         /*изменения зданий*/
         NameText.text = _buildings[current_building].Name;//ставим имя
-        MoneyText.text = _buildings[current_building].Income + "G";//показываем доход со здания
-        TimeText.text = "в течении " + _buildings[current_building].Time_ + " секунд";//время за которое приходит доход
+        MoneyText.text = "+ "+_buildings[current_building].Income + "G/"+_buildings[current_building].Time_+" сек.";//показываем доход со здания
+        
         MonetsText.text = (new BigFloat(money)).Round().ToString() + "G";//Текущий счет
         HeadText.text = (_buildings[current_building].IsAvaliable ? "Улучшить " : "Купить ");//кнопка для покупки здания
         
         lvlText.text = _buildings[current_building].Lvl + " lvl.";//показатель уровня
-        InfoText.text = "Цена: " + _buildings[current_building].NextCost + "G\n" +
+        InfoText.text = "Цена: " + _buildings[current_building].NextCost + "G\n+" +
                         _buildings[current_building].nextIncome() + "G / " + _buildings[current_building].Time_ + " s";
 
         if (money < _buildings[current_building].NextCost)
@@ -144,20 +145,12 @@ public class GameLogic : MonoBehaviour
             BuyButton.GetComponent<Button>().interactable = true;
         }
         
-        /*ИЗМЕНЕНИЕ МЕНЕДЖЕРА*/
-        infoManageText.text = "Время: -1%\nЦена: " + _buildings[current_building].nextManagerCost;
-        if (money >= _buildings[current_building].nextManagerCost && _buildings[current_building].Lvl >= 10 && 
-            _buildings[current_building].upgradeCount < 99 && _buildings[current_building].IsAvaliable)
-        {
-            manageButton.GetComponent<Button>().interactable = true;
-        }
-        else
-        {
-            manageButton.GetComponent<Button>().interactable = false;
-        }
+       
         
-   
-        
+        //информация по хэнд кликеру
+        if( GetComponent<UpgradeHandClick>().HandClicker!= null)
+            handClickInfoText.text ="+ " + GetComponent<UpgradeHandClick>().HandClicker.Income + "G";
+
     }
 
     public void Move(int count)
@@ -191,7 +184,7 @@ public class GameLogic : MonoBehaviour
     {
         
         //при клике дается одна монетка
-        money += 1;
+        money += GetComponent<UpgradeHandClick>().HandClicker.Income;
         update_info();
         
     }
@@ -230,43 +223,14 @@ public class GameLogic : MonoBehaviour
             if (tick.Ticks >= _buildings[i].startWorkAt.Ticks + ((int) (_buildings[i].Time_ * 10000000f)))
             { // если тик больше чем тик при старте работы здания + нужное время на роботу здания
                 money += _buildings[i].Income;
-                Statistics.totalG += _buildings[i].Income;
-                Statistics.totalGAfterReset += _buildings[i].Income;
                 _buildings[i].startWorkAt = new TimeSpan(tick.Ticks);
          
                 
             }
         }
+        
         update_info();
     }
-    // функций вызываймая при закрытии приложения (в билде не работает. только в эдиторе)
-    private void OnApplicationQuit()
-    {
-        SaveSystem.save(this);
-    }
-    // функция вызываемая когда приложение встает на паузу (в андройде равносильно тому что его скрыли)
-    private void OnApplicationPause(bool pauseStatus)
-    {
-        if (pauseStatus)
-        {
-            SaveSystem.save(this);
-        }
-    }
-
-    private void timeSkip(DateTime savedTime)
-    {
-        double secondsSinceSave = DateTime.Now.Subtract(savedTime).TotalSeconds;
-        Debug.Log("Total inActive Time: " + secondsSinceSave);
-        for (int i = 0; i < number_of_buildings; i++)
-        {
-            int countOfTiks =  (int)(secondsSinceSave / Buildings[i].Time_);
-            if (countOfTiks > 0 && Buildings[i].IsAvaliable)
-            {
-                Debug.Log("Buildin " + i + " income: " + _buildings[i].Income * (int)(countOfTiks / 2));
-                Debug.Log("Buildin " + i + " Tiks: " + countOfTiks);
-                money += _buildings[i].Income * (int)(countOfTiks / 2);
-            }
-        }
-    }
+        
 }
 
