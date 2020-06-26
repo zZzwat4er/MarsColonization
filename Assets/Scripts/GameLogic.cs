@@ -100,7 +100,7 @@ public class GameLogic : MonoBehaviour
             
         }
         
-    // Это зависимости для специальных апгрейдов
+        // Это зависимости для специальных апгрейдов
         for (int i = 0; i < number_of_buildings; ++i)
             _buildings[i].Dependent = (depedents[i] == -1 ? null : _buildings[depedents[i]]);
         //пробуем загрузить сейв и если он есть подкачиваем от туда инфу
@@ -110,6 +110,12 @@ public class GameLogic : MonoBehaviour
             _buildings = save.buildings;
             money = save.money;
             timeSkip(save.savedTime);
+            Statistics.totalG = save.totalG;
+            Statistics.totalGAfterReset = save.totalGAfterReset;
+            Statistics.totalSpendG = save.totalSpendG;
+            Statistics.totalSpendGAfterReset = save.totalSpendGAfterReset;
+            Statistics.inGameTimeWhole = save.inGameTimeWhole;
+            Statistics.inGameTimeAfetrReset = save.inGameTimeAfetrReset;
         }
 
         update_info();
@@ -192,13 +198,14 @@ public class GameLogic : MonoBehaviour
         
         //при клике дается одна монетка
         money += 1;
+        Statistics.totalG++;
+        Statistics.totalGAfterReset++;
         update_info();
         
     }
 
     private void FixedUpdate()
     {
-
         //Здесь считаем прогресс дохода здания
         if(_buildings[current_building].IsAvaliable)//если здание купелно, то
         {
@@ -242,6 +249,7 @@ public class GameLogic : MonoBehaviour
     // функций вызываймая при закрытии приложения (в билде не работает. только в эдиторе)
     private void OnApplicationQuit()
     {
+        Statistics.TimeUpdate();
         SaveSystem.save(this);
     }
     // функция вызываемая когда приложение встает на паузу (в андройде равносильно тому что его скрыли)
@@ -249,6 +257,7 @@ public class GameLogic : MonoBehaviour
     {
         if (pauseStatus)
         {
+            Statistics.TimeUpdate();
             SaveSystem.save(this);
         }
     }
@@ -256,15 +265,14 @@ public class GameLogic : MonoBehaviour
     private void timeSkip(DateTime savedTime)
     {
         double secondsSinceSave = DateTime.Now.Subtract(savedTime).TotalSeconds;
-        Debug.Log("Total inActive Time: " + secondsSinceSave);
         for (int i = 0; i < number_of_buildings; i++)
         {
             int countOfTiks =  (int)(secondsSinceSave / Buildings[i].Time_);
             if (countOfTiks > 0 && Buildings[i].IsAvaliable)
             {
-                Debug.Log("Buildin " + i + " income: " + _buildings[i].Income * (int)(countOfTiks / 2));
-                Debug.Log("Buildin " + i + " Tiks: " + countOfTiks);
                 money += _buildings[i].Income * (int)(countOfTiks / 2);
+                Statistics.totalG += _buildings[i].Income * (int)(countOfTiks / 2);
+                Statistics.totalGAfterReset += _buildings[i].Income * (int)(countOfTiks / 2);
             }
         }
     }
