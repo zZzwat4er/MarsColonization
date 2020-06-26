@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Numerics;
 using Game_Classes;
 using UnityEngine;
 
@@ -6,12 +7,13 @@ using UnityEngine;
 [Serializable]
 public class Save{
     public Building[] buildings; // Массив зданий для сейва
-    public BigFloat money; // Текущие деньги
+    public BigInteger money; // Текущие деньги
     public DateTime savedTime;
     public TimeSpan inGameTimeWhole, inGameTimeAfetrReset;
     public BigFloat totalG, totalGAfterReset, totalSpendG, totalSpendGAfterReset;
+    //public HandClicker handClicker; TODO: раскоментить
     
-    public Save (Building[] buildings, BigFloat money, DateTime time){
+    public Save (Building[] buildings, BigInteger money, DateTime time){ //, HandClicker handClick){
         this.buildings = buildings;
         this.money = money;
         savedTime = time;
@@ -21,5 +23,6 @@ public class Save{
         totalGAfterReset = Statistics.totalGAfterReset;
         totalSpendG = Statistics.totalSpendG;
         totalSpendGAfterReset = Statistics.totalSpendGAfterReset;
+        //this.handClicker = handClick; TODO: тут
     }
 }
