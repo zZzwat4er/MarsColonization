@@ -15,7 +15,7 @@ public static class SaveSystem
         string path = Application.persistentDataPath + "/Save.game"; // путь до сейва
         FileStream stream = new FileStream(path, FileMode.Create);// создаем файл для сейва
         // запись сейва в созданый файл
-        formatter.Serialize(stream, new Save(gameLogic.Buildings, new BigFloat(gameLogic.Money).Round(), DateTime.Now));
+        formatter.Serialize(stream, new Save(gameLogic.Buildings, gameLogic.Money, DateTime.Now));
         stream.Close(); // закрываем файл
     }
     // загрузка
