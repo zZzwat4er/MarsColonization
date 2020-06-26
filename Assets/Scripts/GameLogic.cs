@@ -113,7 +113,7 @@ public class GameLogic : MonoBehaviour
         {
             _buildings = save.buildings;
             money = save.money;
-            //GetComponent<UpgradeHandClick>().HandClicker = save.handClicker; TODO: раскоментить
+            GetComponent<UpgradeHandClick>().HandClicker = save.handClicker;
             timeSkip(save.savedTime);
             Statistics.totalG = save.totalG;
             Statistics.totalGAfterReset = save.totalGAfterReset;

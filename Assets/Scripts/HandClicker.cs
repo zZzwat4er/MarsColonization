@@ -1,9 +1,11 @@
-﻿using System.Numerics;
+﻿using System;
+using System.Numerics;
 using System.Runtime.InteropServices;
 using UnityEngine;
 
 namespace Game_Classes
 {
+    [Serializable]
     public class HandClicker
     {
         private BigInteger[] costs =

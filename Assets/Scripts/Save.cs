@@ -12,9 +12,9 @@ public class Save{
     //данные статистики
     public TimeSpan inGameTimeWhole, inGameTimeAfetrReset;
     public BigFloat totalG, totalGAfterReset, totalSpendG, totalSpendGAfterReset;
-    //public HandClicker handClicker; TODO: раскоментить
+    public HandClicker handClicker; 
     
-    public Save (Building[] buildings, BigInteger money, DateTime time){ //, HandClicker handClick){
+    public Save (Building[] buildings, BigInteger money, DateTime time, HandClicker handClick){ //, HandClicker handClick){
         this.buildings = buildings;
         this.money = money;
         savedTime = time;
@@ -24,6 +24,6 @@ public class Save{
         totalGAfterReset = Statistics.totalGAfterReset;
         totalSpendG = Statistics.totalSpendG;
         totalSpendGAfterReset = Statistics.totalSpendGAfterReset;
-        //this.handClicker = handClick; TODO: тут
+        this.handClicker = handClick;
     }
 }
