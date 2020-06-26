@@ -104,7 +104,10 @@ public class GameLogic : MonoBehaviour
     // Это зависимости для специальных апгрейдов
         for (int i = 0; i < number_of_buildings; ++i)
             _buildings[i].Dependent = (depedents[i] == -1 ? null : _buildings[depedents[i]]);
+       
+        
         //пробуем загрузить сейв и если он есть подкачиваем от туда инфу
+        
         Save save = SaveSystem.load();
         if (save != null)
         {
@@ -151,8 +154,10 @@ public class GameLogic : MonoBehaviour
         
         //информация по хэнд кликеру
         if( GetComponent<UpgradeHandClick>().HandClicker!= null)
-            handClickInfoText.text ="+ " + GetComponent<UpgradeHandClick>().HandClicker.Income + "G";
-        GetComponent<UpgradeHandClick>().update_info();
+        {
+            handClickInfoText.text = "+ " + GetComponent<UpgradeHandClick>().HandClicker.Income + "G";
+            GetComponent<UpgradeHandClick>().update_info();
+        }
         
 
     }
