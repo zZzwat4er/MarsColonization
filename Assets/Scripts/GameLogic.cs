@@ -101,7 +101,7 @@ public class GameLogic : MonoBehaviour
             
         }
         
-    // Это зависимости для специальных апгрейдов
+        // Это зависимости для специальных апгрейдов
         for (int i = 0; i < number_of_buildings; ++i)
             _buildings[i].Dependent = (depedents[i] == -1 ? null : _buildings[depedents[i]]);
        
@@ -115,6 +115,12 @@ public class GameLogic : MonoBehaviour
             money = save.money;
             //GetComponent<UpgradeHandClick>().HandClicker = save.handClicker; TODO: раскоментить
             timeSkip(save.savedTime);
+            Statistics.totalG = save.totalG;
+            Statistics.totalGAfterReset = save.totalGAfterReset;
+            Statistics.totalSpendG = save.totalSpendG;
+            Statistics.totalSpendGAfterReset = save.totalSpendGAfterReset;
+            Statistics.inGameTimeWhole = save.inGameTimeWhole;
+            Statistics.inGameTimeAfetrReset = save.inGameTimeAfetrReset;
         }
 
         update_info();
@@ -191,8 +197,8 @@ public class GameLogic : MonoBehaviour
 
     public void handClick()
     {
-        
-        //при клике дается одна монетка
+        Statistics.totalG += GetComponent<UpgradeHandClick>().HandClicker.Income;
+        Statistics.totalGAfterReset += GetComponent<UpgradeHandClick>().HandClicker.Income;
         money += GetComponent<UpgradeHandClick>().HandClicker.Income;
         update_info();
         
@@ -200,7 +206,6 @@ public class GameLogic : MonoBehaviour
 
     private void FixedUpdate()
     {
-
         //Здесь считаем прогресс дохода здания
         if(_buildings[current_building].IsAvaliable)//если здание купелно, то
         {
@@ -245,6 +250,7 @@ public class GameLogic : MonoBehaviour
     // функций вызываймая при закрытии приложения (в билде не работает. только в эдиторе)
     private void OnApplicationQuit()
     {
+        Statistics.TimeUpdate();
         SaveSystem.save(this);
     }
     // функция вызываемая когда приложение встает на паузу (в андройде равносильно тому что его скрыли)
@@ -252,22 +258,25 @@ public class GameLogic : MonoBehaviour
     {
         if (pauseStatus)
         {
+            Statistics.TimeUpdate();
             SaveSystem.save(this);
         }
     }
-
+    
+    //функция для скипа времени в игре
     private void timeSkip(DateTime savedTime)
     {
+        // высчитываем кол-во секунд с момента выключения игры
         double secondsSinceSave = DateTime.Now.Subtract(savedTime).TotalSeconds;
-        Debug.Log("Total inActive Time: " + secondsSinceSave);
+        //проходим через все здания для выщита прибыли от здания за прошедшее время
         for (int i = 0; i < number_of_buildings; i++)
         {
             int countOfTiks =  (int)(secondsSinceSave / Buildings[i].Time_);
             if (countOfTiks > 0 && Buildings[i].IsAvaliable)
             {
-                Debug.Log("Buildin " + i + " income: " + _buildings[i].Income * (int)(countOfTiks / 2));
-                Debug.Log("Buildin " + i + " Tiks: " + countOfTiks);
                 money += _buildings[i].Income * (int)(countOfTiks / 2);
+                Statistics.totalG += _buildings[i].Income * (int)(countOfTiks / 2);
+                Statistics.totalGAfterReset += _buildings[i].Income * (int)(countOfTiks / 2);
             }
         }
     }
