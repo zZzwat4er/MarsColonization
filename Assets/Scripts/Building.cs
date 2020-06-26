@@ -67,7 +67,7 @@ namespace Game_Classes
             set => dependent = value;
         }
 
-        public BigFloat Income
+        public BigInteger Income
         {
             get => income;
         }
