@@ -54,7 +54,8 @@ public class GameLogic : MonoBehaviour
     [Header("Инфа здания")]
     [SerializeField] private Text NameText,  MoneyText, TimeText, MonetsText;
     [SerializeField] private Button BuyButton;
-    [SerializeField] private Text HeadText, InfoText, lvlText; 
+    [SerializeField] private Text HeadText, InfoText, lvlText;
+    [SerializeField] private Sprite img;
     [Header("Настройки")]
     [SerializeField] private float animation_duration = 2f;
     [SerializeField] private GameObject last, current, next;//фантомный вспомогательные здания
@@ -75,7 +76,7 @@ public class GameLogic : MonoBehaviour
     void Awake()
     {
         
-       
+       Debug.Log("GameLogic In");
         
         /*Тут инициализируем объекты и создаем здания*/
         
@@ -89,12 +90,14 @@ public class GameLogic : MonoBehaviour
         buildingsImage[0].transform.SetParent(buildings_panel.transform);
         buildingsImage[0].transform.localScale= new Vector3(1, 1, 1);
         _buildings[0] = new Building(names[0], base_cost[0], base_income[0], base_time[0], risks[0]);
+        buildingsImage[0].GetComponent<Image>().sprite = img;//ставим изображение
         for (int i = 1; i < number_of_buildings; ++i)
         {
             //остальные здания будут справа, как следующие
             buildingsImage[i] = Instantiate(next, next.transform.position, Quaternion.identity) as GameObject;
             buildingsImage[i].transform.SetParent(buildings_panel.transform);
             buildingsImage[i].transform.localScale= new Vector3(1, 1, 1);
+            buildingsImage[i].GetComponent<Image>().sprite = img;//ставим изображение
             
             //Инициализируем наши объекты зданий
             _buildings[i] = new Building(names[i], base_cost[i], base_income[i], base_time[i], risks[i]);
@@ -125,6 +128,7 @@ public class GameLogic : MonoBehaviour
 
         update_info();
         
+        Debug.Log("GameLogic Out");
     }
 
    
@@ -157,7 +161,7 @@ public class GameLogic : MonoBehaviour
         }
         
        
-        //GetComponent<UpgradeBuildings>().update_info(); todo: раскоментить как будет готов UI
+        GetComponent<UpgradeBuildings>().update_info();
         
         //информация по хэнд кликеру
         if( GetComponent<UpgradeHandClick>().HandClicker!= null)

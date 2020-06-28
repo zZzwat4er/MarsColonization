@@ -25,6 +25,7 @@ public class UpgradeHandClick : MonoBehaviour
 
     private void Start()
     {
+        Debug.Log("HandClock up In");
         // для _ берем информацию с объекта Game
         _ = gameInfo.GetComponent<GameLogic>();
         if(_handClicker == null)
@@ -37,6 +38,7 @@ public class UpgradeHandClick : MonoBehaviour
                                                                   _handClicker.getNextIncome(i) + "G за клик";
         }
         _.update_info();//обновляем информацию
+        Debug.Log("HandClock up out");
     }
 
     public void upgrade(int index)

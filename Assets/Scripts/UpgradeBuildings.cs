@@ -9,11 +9,12 @@ public class UpgradeBuildings : MonoBehaviour
     private Building _currentBuilding;
 
     [SerializeField] private Button[] upgrades;
-    
-    /*private void Start()
+    [SerializeField] private Text NameBuild;
+    public void onShow()
     {
+        Debug.Log("onShow UpgradeBuild In");
         _currentBuilding = _.Buildings[_.CurrentBuilding];
-
+        
         for(int i = 0; i < upgrades.Length; i++)
         {
             upgrades[i].GetComponentsInChildren<Text>()[1].text = "Цена: " + _currentBuilding.NextCommonUpgradeCost[i] 
@@ -28,11 +29,12 @@ public class UpgradeBuildings : MonoBehaviour
             }
         }
         _.update_info();
-    } todo: раскоментить как будет готов UI*/
+        Debug.Log("onShow UpgradeBuild out");
+    }
 
     public void upgrade(int type)
     {
-        if (_currentBuilding.NextCommonUpgradeCost[type] < _.Money)
+        if (_currentBuilding.NextCommonUpgradeCost[type] <= _.Money)
         {
             _.Money -= _currentBuilding.NextCommonUpgradeCost[type];
             Statistics.totalSpendG += _currentBuilding.NextCommonUpgradeCost[type];
@@ -62,6 +64,7 @@ public class UpgradeBuildings : MonoBehaviour
     public void update_info()
     {
         _currentBuilding = _.Buildings[_.CurrentBuilding];
+        NameBuild.text = "Улучшение на " + _currentBuilding.name;
         for (int i = 0; i < upgrades.Length; ++i)
         {
             if (_currentBuilding.NextCommonUpgradeCost[i] > _.Money) upgrades[i].interactable = false;//если денег не хватает, то выключаем кнопку
