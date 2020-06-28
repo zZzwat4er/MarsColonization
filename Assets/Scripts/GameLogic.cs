@@ -69,6 +69,7 @@ public class GameLogic : MonoBehaviour
         //переменные для работы и совершения вычислений
     private int current_building = 0;
     private BigInteger money= 0;
+    private DateTime pauseTime = DateTime.Now;
     
     
     void Awake()
@@ -257,8 +258,13 @@ public class GameLogic : MonoBehaviour
     {
         if (pauseStatus)
         {
+            pauseTime = DateTime.Now;
             Statistics.TimeUpdate();
             SaveSystem.save(this);
+        }
+        else
+        {
+            timeSkip(pauseTime);
         }
     }
     
