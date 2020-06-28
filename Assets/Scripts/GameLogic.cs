@@ -118,12 +118,7 @@ public class GameLogic : MonoBehaviour
             money = save.money;
             GetComponent<UpgradeHandClick>().HandClicker = save.handClicker;
             timeSkip(save.savedTime);
-            Statistics.totalG = save.totalG;
-            Statistics.totalGAfterReset = save.totalGAfterReset;
-            Statistics.totalSpendG = save.totalSpendG;
-            Statistics.totalSpendGAfterReset = save.totalSpendGAfterReset;
-            Statistics.inGameTimeWhole = save.inGameTimeWhole;
-            Statistics.inGameTimeAfetrReset = save.inGameTimeAfetrReset;
+            Statistics.statLoad(save);
             return;
         }
 
