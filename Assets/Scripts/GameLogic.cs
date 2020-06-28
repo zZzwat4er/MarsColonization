@@ -69,7 +69,7 @@ public class GameLogic : MonoBehaviour
         //переменные для работы и совершения вычислений
     private int current_building = 0;
     private BigInteger money= 0;
-    private DateTime pauseTime = DateTime.Now;
+    private DateTime pauseTime = DateTime.Now;//переменная сохраняющая время паузы для timeSkip если игрок не закроет игру при сворачивании
     
     
     void Awake()
@@ -157,6 +157,7 @@ public class GameLogic : MonoBehaviour
         }
         
        
+        //GetComponent<UpgradeBuildings>().update_info(); todo: раскоментить как будет готов UI
         
         //информация по хэнд кликеру
         if( GetComponent<UpgradeHandClick>().HandClicker!= null)

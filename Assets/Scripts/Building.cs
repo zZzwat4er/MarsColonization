@@ -20,6 +20,7 @@ namespace Game_Classes
         public float base_risk; //базовый риск
         public const float exp = 1.15f; //экспонента для апгрейда
         public int lvl;//уровень здания
+        public BigInteger[] nextCommonUpgradeCost;//цена для покупки CommonUpgrade
         public float coef, spec_coef;//коэфициенты для подсчета прибыли с данного здания
         public BigInteger nextManagerCost; //цена для покупки следующего менеджера
         public int upgradeCount = 0;//сколько раз апргейднули менеджера
@@ -30,6 +31,14 @@ namespace Game_Classes
                                  (BigInteger) (coef + spec_coef * (dependent == null ? 0 : (int) (dependent.lvl / 10))
                                  )) * (1+lvl);
         }
+
+        //функция пересчитывающая инкам при покупки аппов (изменения полей coef и spec_coef)
+        public void recalculateIncome()
+        {
+            income = base_income * (BigInteger)(coef + spec_coef * (dependent == null ? 0 : (int)(dependent.lvl / 10)))
+                                 * lvl;
+        }
+
         public Building(string name, BigInteger baseCost, BigInteger baseIncome, float baseTime, float baseRisk, Building dependent = null)
         {
             this.nextManagerCost = baseCost*10;
@@ -45,6 +54,7 @@ namespace Game_Classes
             income = 0;
             spec_coef = 0;
             coef = 1;
+            nextCommonUpgradeCost = new [] { baseCost * 10, baseCost * 25, baseCost * 50 } ;
             this.dependent = dependent;
         }
         //(BigInteger)(base_cost * (BigInteger) Math.Pow(exp, lvl));
@@ -95,7 +105,12 @@ namespace Game_Classes
             get => next_cost;
             
         }
-        
+
+        public BigInteger[] NextCommonUpgradeCost
+        {
+            get => nextCommonUpgradeCost;
+            set => nextCommonUpgradeCost = value;
+        }
 
         public bool IsAvaliable
         {
