@@ -80,7 +80,7 @@ public class GameLogic : MonoBehaviour
         
         /*Тут инициализируем объекты и создаем здания*/
         
-        money = 0;//инициализация денег
+        money = 10000000000000;//инициализация денег
         _buildings = new Building[number_of_buildings];//инициализация здания
         
         current_building = 0;//ставим текущие здание как 0
@@ -135,6 +135,8 @@ public class GameLogic : MonoBehaviour
 
     public void update_info()
     {
+        _buildings[0].recalculateIncome();
+        Debug.Log(_buildings[0].coef);
         //Функция обновляют всю информацию игры
         //Ее нужно всегда вызывать после всяческих изменений
         

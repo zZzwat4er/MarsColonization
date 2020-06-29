@@ -8,6 +8,8 @@ public class UpgradeBuildings : MonoBehaviour
     [SerializeField] private GameLogic _;
     private Building _currentBuilding;
 
+    private int[] levelsRcuaers = {10, 25, 50};
+
     [SerializeField] private Button[] upgrades;
     [SerializeField] private Text NameBuild;
     public void onShow()
@@ -42,16 +44,25 @@ public class UpgradeBuildings : MonoBehaviour
             switch (type)
             {
                 case 0:
-                    _currentBuilding.coef += 0.2f;
-                    _currentBuilding.NextCommonUpgradeCost[type] *= 10;
+                    if(_currentBuilding.Lvl >= 10)
+                    {
+                        _currentBuilding.coef += 0.2f;
+                        _currentBuilding.NextCommonUpgradeCost[type] *= 2;
+                    }
                     break;
                 case 1:
-                    _currentBuilding.coef += 0.5f;
-                    _currentBuilding.NextCommonUpgradeCost[type] *= 50;
+                    if(_currentBuilding.Lvl >= 25)
+                    {
+                        _currentBuilding.coef += 0.5f;
+                        _currentBuilding.NextCommonUpgradeCost[type] *= 5;
+                    }
                     break;
                 case 2:
-                    _currentBuilding.coef += 1f;
-                    _currentBuilding.NextCommonUpgradeCost[type] *= 100;
+                    if(_currentBuilding.Lvl >= 50)
+                    {
+                        _currentBuilding.coef += 1f;
+                        _currentBuilding.NextCommonUpgradeCost[type] *= 10;
+                    }
                     break;
                 default:
                     break;
@@ -67,7 +78,8 @@ public class UpgradeBuildings : MonoBehaviour
         NameBuild.text = "Улучшение на " + _currentBuilding.name;
         for (int i = 0; i < upgrades.Length; ++i)
         {
-            if (_currentBuilding.NextCommonUpgradeCost[i] > _.Money) upgrades[i].interactable = false;//если денег не хватает, то выключаем кнопку
+            if (_currentBuilding.NextCommonUpgradeCost[i] > _.Money ||
+                levelsRcuaers[i] > _currentBuilding.Lvl) upgrades[i].interactable = false;//если денег не хватает, то выключаем кнопку
             else upgrades[i].interactable = true;//а если хватает, то включаем
             upgrades[i].GetComponentsInChildren<Text>()[1].text = "Цена: " + _currentBuilding.NextCommonUpgradeCost[i] 
                                                                            + "G\nДоход: ";

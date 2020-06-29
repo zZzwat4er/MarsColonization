@@ -27,16 +27,15 @@ namespace Game_Classes
         
         public BigInteger nextIncome()//подсчет дохода при следующем апгрейде
         {
-            return (BigInteger) (base_income *
-                                 (BigInteger) (coef + spec_coef * (dependent == null ? 0 : (int) (dependent.lvl / 10))
-                                 )) * (1+lvl);
+            return (BigInteger) (base_income * lvl * 
+                                 (BigInteger)(coef * 10 + spec_coef * (dependent == null ? 0 : (int) (dependent.lvl / 10)))) / 10;
         }
 
         //функция пересчитывающая инкам при покупки аппов (изменения полей coef и spec_coef)
         public void recalculateIncome()
         {
-            income = base_income * (BigInteger)(coef + spec_coef * (dependent == null ? 0 : (int)(dependent.lvl / 10)))
-                                 * lvl;
+            income = (base_income * lvl * 
+                                  (BigInteger)(coef * 10 + spec_coef * (dependent == null ? 0 : (int) (dependent.lvl / 10)))) / 10;
         }
 
         public Building(string name, BigInteger baseCost, BigInteger baseIncome, float baseTime, float baseRisk, Building dependent = null)
