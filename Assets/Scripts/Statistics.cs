@@ -5,11 +5,11 @@ using UnityEngine.UI;
 
 public class Statistics : MonoBehaviour
 {
-    [Header("Экран Стфтистики")]
+    [Header("Экран Статистики")]
     [SerializeField]private GameObject statObject;
-
+    
     [Header("Поля Статистики")] [SerializeField]
-    private static Text inGameTimeWholeText, inGameTimeAfetrResetText, totalGText, 
+    private  Text inGameTimeWholeText, inGameTimeAfetrResetText, totalGText, 
         totalGAfterResetText, totalSpendGText, totalSpendGAfterResetText;
     
     private static TimeSpan timeFromLastUpdate = new TimeSpan(0, 0, 0);
@@ -31,7 +31,7 @@ public class Statistics : MonoBehaviour
     
     //функция абдейта статистики (Вызывать тольлко пока экран статистики активен на постоянной основе)
     //(В остальное время функция не активна)
-    public static void info_update()
+    public void info_update()
     {
         TimeUpdate();
         inGameTimeWholeText.text = "Время в игре: " + inGameTimeWhole;

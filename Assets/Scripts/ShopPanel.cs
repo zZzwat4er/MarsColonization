@@ -16,6 +16,12 @@ public class ShopPanel : MonoBehaviour
         
     }
 
+    public void Hide()
+    {
+        shopPanel.SetActive(false);
+        handClickPanel.SetActive(false);
+        BuildUp.SetActive(false);
+    }
     public void showClick()
     {
         handClickPanel.SetActive(!handClickPanel.active);
