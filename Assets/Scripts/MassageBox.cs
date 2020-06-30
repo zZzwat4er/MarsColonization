@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class MassageBox : MonoBehaviour
 {
+    [SerializeField] private Metamechanics metamech;
 
     [SerializeField] private GameObject massageBox;// massage box it self
     [SerializeField] private Text massage;
@@ -12,13 +13,14 @@ public class MassageBox : MonoBehaviour
     [SerializeField] private Button quit;
 
     private int currentState = 0;
+    private int zerosCount = 0;
 
     private void Start()
     {
         yes.gameObject.SetActive(false);
     }
 
-    public void quitMB()
+    public void quitButton()
     {
         yes.gameObject.SetActive(false);
         massageBox.SetActive(false);
@@ -29,7 +31,7 @@ public class MassageBox : MonoBehaviour
         switch (currentState)
         {
             case 1:
-                //todo: prestige function
+                metamech.gameReset(zerosCount);
                 break;
             default:
                 Debug.LogError("Unexpected massage box state");
@@ -52,8 +54,15 @@ public class MassageBox : MonoBehaviour
         massage.text = "Show text for event: " + index;
     }
 
-    public void showPrestige()
+    public void showPrestige(BigInteger money)
     {
+        zerosCount = 0;
+        while (money > 0)
+        {
+            money /= 10;
+            zerosCount++;
+        }
+        if(zerosCount < 4) return;
         quit.GetComponentInChildren<Text>().text = "no";
         yes.GetComponentInChildren<Text>().text = "yes";
         currentState = 1;
