@@ -41,7 +41,7 @@ public class GameLogic : MonoBehaviour
     
     //Геттеры и сеттеры
     public Building[] Buildings => _buildings;
-
+    public int TensPower => tensPower;
     public int NumberOfBuildings => number_of_buildings; 
     public int CurrentBuilding => current_building;
     public BigInteger Money
@@ -72,7 +72,9 @@ public class GameLogic : MonoBehaviour
     private int current_building = 0;
     private BigInteger money= 0;
     private DateTime pauseTime = DateTime.Now;//переменная сохраняющая время паузы для timeSkip если игрок не закроет игру при сворачивании
-
+    private int tensPower = 5;
+    
+    
     [Header("Message Box")][SerializeField]
     private GameObject msgShower;
 
@@ -206,6 +208,14 @@ public class GameLogic : MonoBehaviour
 
     private void FixedUpdate()
     {
+        // предложение получить престиж
+        Debug.Log("tens power " + tensPower);
+        Debug.Log("asdf " + BigInteger.Pow(10, tensPower));
+        if(money >= BigInteger.Pow(10, tensPower))
+        {
+            msgShower.GetComponent<MassageBox>().showPrestige(money);
+            tensPower++;
+        }
         //Здесь считаем прогресс дохода здания
         if(_buildings[current_building].IsAvaliable)//если здание купелно, то
         {
@@ -275,6 +285,8 @@ public class GameLogic : MonoBehaviour
         
         // высчитываем кол-во секунд с момента выключения игры
         double secondsSinceSave = DateTime.Now.Subtract(savedTime).TotalSeconds;
+        if(secondsSinceSave < 1) return;
+        BigInteger resInc = 0;
         //проходим через все здания для выщита прибыли от здания за прошедшее время
         for (int i = 0; i < number_of_buildings; i++)
         {
@@ -286,9 +298,10 @@ public class GameLogic : MonoBehaviour
                 money += _buildings[i].Income * (int)(countOfTiks / 2);
                 Statistics.totalG += _buildings[i].Income * (int)(countOfTiks / 2);
                 Statistics.totalGAfterReset += _buildings[i].Income * (int)(countOfTiks / 2);
+                resInc += _buildings[i].Income * (int)(countOfTiks / 2);
             }
         }
-        msgShower.GetComponent<MassageBox>().showIncome(5,secondsSinceSave); //TODO: поменяй тут так, чтобы показывало всё правильно
+        msgShower.GetComponent<MassageBox>().showIncome(resInc, new TimeSpan(0, 0, 0, (int)secondsSinceSave, 0)); //TODO: поменяй тут так, чтобы показывало всё правильно
     }
 
     public void buildingsInit(int prestigeBonus = 4)

@@ -55,9 +55,10 @@ public class MassageBox : MonoBehaviour
                 Debug.LogError("Unexpected massage box state");
                 break;
         }
+        messageBox.SetActive(false);
     }
 
-    public void showIncome(BigInteger income, double time)
+    public void showIncome(BigInteger income, TimeSpan time)
     {
         showMessage("За прошедшие " + time + " вы получили " + income + " G.","ok");
     }
