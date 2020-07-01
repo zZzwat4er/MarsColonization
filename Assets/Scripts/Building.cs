@@ -27,7 +27,7 @@ namespace Game_Classes
         
         public BigInteger nextIncome()//подсчет дохода при следующем апгрейде
         {
-            return (BigInteger) (base_income * lvl * 
+            return (BigInteger) (base_income * (lvl + 1) * 
                                  (BigInteger)(coef * 10 + spec_coef * (dependent == null ? 0 : (int) (dependent.lvl / 10)))) / 10;
         }
 
