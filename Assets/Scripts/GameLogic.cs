@@ -41,7 +41,7 @@ public class GameLogic : MonoBehaviour
     
     //Геттеры и сеттеры
     public Building[] Buildings => _buildings;
-
+    public int TensPower => tensPower;
     public int NumberOfBuildings => number_of_buildings; 
     public int CurrentBuilding => current_building;
     public BigInteger Money
@@ -72,7 +72,9 @@ public class GameLogic : MonoBehaviour
     private int current_building = 0;
     private BigInteger money= 0;
     private DateTime pauseTime = DateTime.Now;//переменная сохраняющая время паузы для timeSkip если игрок не закроет игру при сворачивании
-
+    private int tensPower = 5;
+    
+    
     [Header("Message Box")][SerializeField]
     private GameObject msgShower;
 
@@ -206,6 +208,14 @@ public class GameLogic : MonoBehaviour
 
     private void FixedUpdate()
     {
+        // предложение получить престиж
+        Debug.Log("tens power " + tensPower);
+        Debug.Log("asdf " + BigInteger.Pow(10, tensPower));
+        if(money >= BigInteger.Pow(10, tensPower))
+        {
+            msgShower.GetComponent<MassageBox>().showPrestige(money);
+            tensPower++;
+        }
         //Здесь считаем прогресс дохода здания
         if(_buildings[current_building].IsAvaliable)//если здание купелно, то
         {
