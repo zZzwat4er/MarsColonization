@@ -7,8 +7,8 @@ public class MassageBox : MonoBehaviour
 {
     [SerializeField] private Metamechanics metamech;
 
-    [SerializeField] private GameObject massageBox;// massage box it self
-    [SerializeField] private Text massage;
+    [SerializeField] private GameObject messageBox;// massage box it self
+    [SerializeField] private Text message;
     [SerializeField] private Button yes;
     [SerializeField] private Button quit;
 
@@ -20,10 +20,28 @@ public class MassageBox : MonoBehaviour
         yes.gameObject.SetActive(false);
     }
 
+
+    void showMessage(string text, string qtMessage,  string yesMessage = null)
+    {
+        message.text = text;
+        
+        if(yesMessage == null) yes.gameObject.SetActive(false);
+        else
+        {
+            yes.gameObject.SetActive(true);
+            yes.GetComponentInChildren<Text>().text = yesMessage;
+        }
+        quit.GetComponentInChildren<Text>().text = qtMessage;
+        
+        messageBox.SetActive(true);
+        
+    }
+    
+
     public void quitButton()
     {
         yes.gameObject.SetActive(false);
-        massageBox.SetActive(false);
+        messageBox.SetActive(false);
     }
 
     public void yesButton()
@@ -39,19 +57,17 @@ public class MassageBox : MonoBehaviour
         }
     }
 
-    public void showIncome(BigInteger income, TimeSpan time)
+    public void showIncome(BigInteger income, double time)
     {
-        quit.GetComponentInChildren<Text>().text = "ok";
-        massageBox.SetActive(true);
-        massage.text = "За прошедшие " + time + " вы получили " + income + " G.";
+        showMessage("За прошедшие " + time + " вы получили " + income + " G.","ok");
     }
 
     public void showEvent(int index)
     {
-        quit.GetComponentInChildren<Text>().text = "ok";
-        massageBox.SetActive(true);
+        
+        
         //todo: events texts
-        massage.text = "Show text for event: " + index;
+        showMessage("Show text for event: " + index, "ok");
     }
 
     public void showPrestige(BigInteger money)
@@ -63,13 +79,10 @@ public class MassageBox : MonoBehaviour
             zerosCount++;
         }
         if(zerosCount < 4) return;
-        quit.GetComponentInChildren<Text>().text = "no";
-        yes.GetComponentInChildren<Text>().text = "yes";
+        
         currentState = 1;
-        yes.gameObject.SetActive(true);
-        massageBox.SetActive(true);
         //todo prestige text
-        massage.text = "Show text for prestige";
+        showMessage("Show text for prestige", "no", "yes");
     }
 
 }

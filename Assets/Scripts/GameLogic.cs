@@ -72,12 +72,16 @@ public class GameLogic : MonoBehaviour
     private int current_building = 0;
     private BigInteger money= 0;
     private DateTime pauseTime = DateTime.Now;//переменная сохраняющая время паузы для timeSkip если игрок не закроет игру при сворачивании
-    
-    
+
+    [Header("Message Box")][SerializeField]
+    private GameObject msgShower;
+
     void Awake()
     {
         
        Debug.Log("GameLogic In");
+       
+       
        
         current_building = 0;//ставим текущие здание как 0
         buildingsImage = new GameObject[number_of_buildings];//инициализируем
@@ -125,7 +129,7 @@ public class GameLogic : MonoBehaviour
     public void update_info()
     {
         _buildings[0].recalculateIncome();
-        Debug.Log(_buildings[0].coef);
+        
         //Функция обновляют всю информацию игры
         //Ее нужно всегда вызывать после всяческих изменений
         
@@ -267,12 +271,16 @@ public class GameLogic : MonoBehaviour
     //функция для скипа времени в игре
     private void timeSkip(DateTime savedTime)
     {
+        
+        
         // высчитываем кол-во секунд с момента выключения игры
         double secondsSinceSave = DateTime.Now.Subtract(savedTime).TotalSeconds;
         //проходим через все здания для выщита прибыли от здания за прошедшее время
         for (int i = 0; i < number_of_buildings; i++)
         {
             int countOfTiks =  (int)(secondsSinceSave / Buildings[i].Time_);
+
+            
             if (countOfTiks > 0 && Buildings[i].IsAvaliable)
             {
                 money += _buildings[i].Income * (int)(countOfTiks / 2);
@@ -280,6 +288,7 @@ public class GameLogic : MonoBehaviour
                 Statistics.totalGAfterReset += _buildings[i].Income * (int)(countOfTiks / 2);
             }
         }
+        msgShower.GetComponent<MassageBox>().showIncome(5,secondsSinceSave); //TODO: поменяй тут так, чтобы показывало всё правильно
     }
 
     public void buildingsInit(int prestigeBonus = 4)
