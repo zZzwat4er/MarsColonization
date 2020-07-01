@@ -40,7 +40,8 @@ public class GameLogic : MonoBehaviour
     /**********************************************************************/
     
     //Геттеры и сеттеры
-    public Building[] Buildings => _buildings; 
+    public Building[] Buildings => _buildings;
+
     public int NumberOfBuildings => number_of_buildings; 
     public int CurrentBuilding => current_building;
     public BigInteger Money
@@ -77,19 +78,13 @@ public class GameLogic : MonoBehaviour
     {
         
        Debug.Log("GameLogic In");
-        
-        /*Тут инициализируем объекты и создаем здания*/
-        
-        money = 10000000000000;//инициализация денег
-        _buildings = new Building[number_of_buildings];//инициализация здания
-        
+       
         current_building = 0;//ставим текущие здание как 0
         buildingsImage = new GameObject[number_of_buildings];//инициализируем
             //Создаем самое первое здание, которое будет стоять по середине экрана
         buildingsImage[0] = Instantiate(current, current.transform.position, Quaternion.identity);
         buildingsImage[0].transform.SetParent(buildings_panel.transform);
         buildingsImage[0].transform.localScale= new Vector3(1, 1, 1);
-        _buildings[0] = new Building(names[0], base_cost[0], base_income[0], base_time[0], risks[0]);
         buildingsImage[0].GetComponent<Image>().sprite = img;//ставим изображение
         for (int i = 1; i < number_of_buildings; ++i)
         {
@@ -98,21 +93,11 @@ public class GameLogic : MonoBehaviour
             buildingsImage[i].transform.SetParent(buildings_panel.transform);
             buildingsImage[i].transform.localScale= new Vector3(1, 1, 1);
             buildingsImage[i].GetComponent<Image>().sprite = img;//ставим изображение
-            
-            //Инициализируем наши объекты зданий
-            _buildings[i] = new Building(names[i], base_cost[i], base_income[i], base_time[i], risks[i]);
-            
-            
             //прикручиваем прогресс бары нашим зданиям
             // buildingsImage[i].GetComponentInChildren<Image>().transform.localScale = Vector3.zero;
             
         }
-        
-        // Это зависимости для специальных апгрейдов
-        for (int i = 0; i < number_of_buildings; ++i)
-            _buildings[i].Dependent = (depedents[i] == -1 ? null : _buildings[depedents[i]]);
-       
-        
+
         //пробуем загрузить сейв и если он есть подкачиваем от туда инфу
         
         Save save = SaveSystem.load();
@@ -124,6 +109,10 @@ public class GameLogic : MonoBehaviour
             timeSkip(save.savedTime);
             Statistics.statLoad(save);
             return;
+        }
+        else
+        {
+            buildingsInit();
         }
 
         update_info();
@@ -292,6 +281,29 @@ public class GameLogic : MonoBehaviour
             }
         }
     }
+
+    public void buildingsInit(int prestigeBonus = 4)
+    {
+        /*Тут инициализируем объекты и создаем здания*/
         
+        money = 0;//инициализация денег
+        _buildings = new Building[number_of_buildings];//инициализация здания
+        
+        current_building = 0;//ставим текущие здание как 0
+        for (int i = 0; i < number_of_buildings; ++i)
+        {
+            BigInteger sell;
+            if (prestigeBonus < 24) sell = base_cost[i] * (prestigeBonus - 4) / 20;
+            else sell = base_cost[i] * 100 / 99;
+            //Инициализируем наши объекты зданий
+            _buildings[i] = new Building(names[i], 
+                base_cost[i] - sell,
+                base_income[i] * (int)((Math.Pow(prestigeBonus - 3, 1.075) - (prestigeBonus - 4)) * 10) / 10,
+                base_time[i], risks[i]);
+            _buildings[i].Dependent = (depedents[i] == -1 ? null : _buildings[depedents[i]]);
+        }
+
+    }
+
 }
 
