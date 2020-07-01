@@ -70,7 +70,7 @@ public class GameLogic : MonoBehaviour
 
         //переменные для работы и совершения вычислений
     private int current_building = 0;
-    private BigInteger money= 0;
+    private BigInteger money = 0;
     private DateTime pauseTime = DateTime.Now;//переменная сохраняющая время паузы для timeSkip если игрок не закроет игру при сворачивании
     private int tensPower = 5;
     
@@ -209,8 +209,6 @@ public class GameLogic : MonoBehaviour
     private void FixedUpdate()
     {
         // предложение получить престиж
-        Debug.Log("tens power " + tensPower);
-        Debug.Log("asdf " + BigInteger.Pow(10, tensPower));
         if(money >= BigInteger.Pow(10, tensPower))
         {
             msgShower.GetComponent<MassageBox>().showPrestige(money);
@@ -308,7 +306,7 @@ public class GameLogic : MonoBehaviour
     {
         /*Тут инициализируем объекты и создаем здания*/
         
-        money = 0;//инициализация денег
+        money = 99999;//инициализация денег
         _buildings = new Building[number_of_buildings];//инициализация здания
         
         current_building = 0;//ставим текущие здание как 0

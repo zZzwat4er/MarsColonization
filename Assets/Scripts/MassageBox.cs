@@ -17,17 +17,18 @@ public class MassageBox : MonoBehaviour
 
     private void Start()
     {
-        yes.gameObject.SetActive(false);
+        
     }
 
 
     void showMessage(string text, string qtMessage,  string yesMessage = null)
     {
         message.text = text;
-        
+        Debug.Log("msg: " + yesMessage);
         if(yesMessage == null) yes.gameObject.SetActive(false);
         else
         {
+            Debug.Log("not null");
             yes.gameObject.SetActive(true);
             yes.GetComponentInChildren<Text>().text = yesMessage;
         }
@@ -40,7 +41,7 @@ public class MassageBox : MonoBehaviour
 
     public void quitButton()
     {
-        yes.gameObject.SetActive(false);
+        
         messageBox.SetActive(false);
     }
 
