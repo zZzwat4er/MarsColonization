@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Numerics;
 using DG.Tweening;
 using UnityEngine;
@@ -73,7 +74,8 @@ public class GameLogic : MonoBehaviour
     private BigInteger money = 0;
     private DateTime pauseTime = DateTime.Now;//переменная сохраняющая время паузы для timeSkip если игрок не закроет игру при сворачивании
     private int tensPower = 5;
-    
+    public List<Events> events = new List<Events>();
+    private float timeToNextEvent = 600;
     
     [Header("Message Box")][SerializeField]
     private GameObject msgShower;
@@ -114,6 +116,7 @@ public class GameLogic : MonoBehaviour
             GetComponent<UpgradeHandClick>().HandClicker = save.handClicker;
             timeSkip(save.savedTime);
             Statistics.statLoad(save);
+            tensPower = save.tensPower;
             return;
         }
         else
@@ -199,15 +202,36 @@ public class GameLogic : MonoBehaviour
 
     public void handClick()
     {
-        Statistics.totalG += GetComponent<UpgradeHandClick>().HandClicker.Income;
-        Statistics.totalGAfterReset += GetComponent<UpgradeHandClick>().HandClicker.Income;
-        money += GetComponent<UpgradeHandClick>().HandClicker.Income;
+        // обработка эвента на хенд клике
+        float eventMod = -1f;
+        if(events != null)
+            foreach (var ev in events)
+            {
+                if(ev.getInfo().Item1 != null)
+                    if (ev.getInfo().Item1[0] == NumberOfBuildings)
+                        eventMod += ev.getInfo().Item2;
+            }
+
+        if (eventMod == -1f) eventMod = 0f;
+        eventMod += 1f;
+        Statistics.totalG += GetComponent<UpgradeHandClick>().HandClicker.Income * (int)eventMod;
+        Statistics.totalGAfterReset += GetComponent<UpgradeHandClick>().HandClicker.Income * (int)eventMod;
+        money += GetComponent<UpgradeHandClick>().HandClicker.Income * (int)eventMod;
         update_info();
         
     }
 
     private void FixedUpdate()
     {
+        //таймер до эвента
+        timeToNextEvent -= Time.deltaTime;
+        if (timeToNextEvent < 0)
+        {
+            // применить евент и показать его
+            GetComponent<Metamechanics>().playEvent();
+            msgShower.GetComponent<MassageBox>().showEvent(events.Last().Index);
+            timeToNextEvent = 600;
+        }
         // предложение получить престиж
         if(money >= BigInteger.Pow(10, tensPower))
         {
@@ -240,11 +264,44 @@ public class GameLogic : MonoBehaviour
         }
 
         var tick = new TimeSpan(DateTime.Now.Ticks);//смотрим на текущий тик игры;
+        //отнимаем время от эвента и удаляем его если он кончился
+        if(events != null)
+            foreach (var ev in events)
+            {
+                ev.Time -= Time.deltaTime;
+                if (ev.Time < 0)//удаление законченого эвента
+                {
+                    events.Remove(ev);
+                    break;
+                }
+                    
+                if (ev.getInfo().Item1 == null)// если индексы равны null то это разовый евент на деньги
+                { 
+                    money += money * (int) (ev.getInfo().Item2 * 100) / 100;
+                    events.Remove(ev);
+                    break;
+                }
+            }
+
         for (int i = 0; i < number_of_buildings; ++i)
         {
+            //вычесляем модификатор для здания от евента
+            float eventMod = -1f;
+            if(events != null)
+                foreach (var ev in events)
+                    foreach (var index in ev.getInfo().Item1)
+                    {
+                        Debug.Log(index);
+                        if (index == i) eventMod += ev.getInfo().Item2;
+                    }
+
+            if (eventMod == -1f) eventMod = 0f;
+            eventMod += 1f;
             if (tick.Ticks >= _buildings[i].startWorkAt.Ticks + ((int) (_buildings[i].Time_ * 10000000f)))
             { // если тик больше чем тик при старте работы здания + нужное время на роботу здания
-                money += _buildings[i].Income;
+                money += _buildings[i].Income * (int)(eventMod * 10) / 10;
+                Statistics.totalG += _buildings[i].Income * (int)(eventMod * 10) / 10;
+                Statistics.totalGAfterReset += _buildings[i].Income * (int)(eventMod * 10) / 10;
                 _buildings[i].startWorkAt = new TimeSpan(tick.Ticks);
          
                 
