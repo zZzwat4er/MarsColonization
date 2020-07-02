@@ -76,6 +76,7 @@ public class GameLogic : MonoBehaviour
     private int tensPower = 5;
     public List<Events> events = new List<Events>();
     private float timeToNextEvent = 600;
+    private TimeSpan timeSkipBound = new TimeSpan(8, 0, 0);
     
     [Header("Message Box")][SerializeField]
     private GameObject msgShower;
@@ -340,6 +341,8 @@ public class GameLogic : MonoBehaviour
         
         // высчитываем кол-во секунд с момента выключения игры
         double secondsSinceSave = DateTime.Now.Subtract(savedTime).TotalSeconds;
+        //проверка на ограничение
+        if (secondsSinceSave > timeSkipBound.TotalSeconds) secondsSinceSave = timeSkipBound.TotalSeconds;
         if(secondsSinceSave < 1) return;
         BigInteger resInc = 0;
         //проходим через все здания для выщита прибыли от здания за прошедшее время
@@ -363,7 +366,7 @@ public class GameLogic : MonoBehaviour
     {
         /*Тут инициализируем объекты и создаем здания*/
         
-        money = 99999;//инициализация денег
+        money = 0;//инициализация денег
         _buildings = new Building[number_of_buildings];//инициализация здания
         
         current_building = 0;//ставим текущие здание как 0
