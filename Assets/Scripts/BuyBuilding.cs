@@ -3,11 +3,16 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Numerics;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class BuyBuilding : MonoBehaviour
 {
     [SerializeField] private GameObject game_info;
 
+    [SerializeField]
+    private Button buyButton;
+
+    [SerializeField] private AudioClip buySound, upSound;
     public void buy_building()
     {
         
@@ -23,7 +28,12 @@ public class BuyBuilding : MonoBehaviour
                 /*если здание до этого не было купленым, то выставляем ему начальный тик
                  если мы не будем делать эту проверку, то каждый раз когда будет апгрейд здания, будет обнуляться таймер
                  */
+                buyButton.GetComponent<AudioSource>().clip = buySound;
                 _.Buildings[_.CurrentBuilding].startWorkAt = new TimeSpan(DateTime.Now.Ticks);
+            }
+            else
+            {
+                buyButton.GetComponent<AudioSource>().clip = upSound;
             }
             _.Buildings[_.CurrentBuilding].IsAvaliable = true;
             _.update_info();

@@ -57,7 +57,7 @@ public class GameLogic : MonoBehaviour
     [SerializeField] private Text NameText,  MoneyText, TimeText, MonetsText;
     [SerializeField] private Button BuyButton;
     [SerializeField] private Text HeadText, InfoText, lvlText;
-    [SerializeField] private Sprite img;
+    [SerializeField] private Sprite[] buildingSprites;
     [Header("Настройки")]
     [SerializeField] private float animation_duration = 2f;
     [SerializeField] private GameObject last, current, next;//фантомный вспомогательные здания
@@ -81,12 +81,17 @@ public class GameLogic : MonoBehaviour
     [Header("Message Box")][SerializeField]
     private GameObject msgShower;
 
+    [Header("Фоновая музыка")] [SerializeField]
+    private AudioClip[] backMusics;
+    private int currentMusic=0;
+    private AudioSource audio;
+
     void Awake()
     {
         
        Debug.Log("GameLogic In");
-       
-       
+
+       audio = gameObject.GetComponent<AudioSource>();
        
         current_building = 0;//ставим текущие здание как 0
         buildingsImage = new GameObject[number_of_buildings];//инициализируем
@@ -94,14 +99,15 @@ public class GameLogic : MonoBehaviour
         buildingsImage[0] = Instantiate(current, current.transform.position, Quaternion.identity);
         buildingsImage[0].transform.SetParent(buildings_panel.transform);
         buildingsImage[0].transform.localScale= new Vector3(1, 1, 1);
-        buildingsImage[0].GetComponent<Image>().sprite = img;//ставим изображение
+        buildingsImage[0].GetComponent<Image>().sprite = buildingSprites[0];//ставим изображение
         for (int i = 1; i < number_of_buildings; ++i)
         {
             //остальные здания будут справа, как следующие
             buildingsImage[i] = Instantiate(next, next.transform.position, Quaternion.identity) as GameObject;
             buildingsImage[i].transform.SetParent(buildings_panel.transform);
             buildingsImage[i].transform.localScale= new Vector3(1, 1, 1);
-            buildingsImage[i].GetComponent<Image>().sprite = img;//ставим изображение
+            buildingsImage[i].GetComponent<Image>().sprite = buildingSprites[i% buildingSprites.Length];//ставим изображение
+            buildingsImage[i].transform.GetChild(0).GetComponent<Image>().sprite =  buildingSprites[i% buildingSprites.Length];
             //прикручиваем прогресс бары нашим зданиям
             // buildingsImage[i].GetComponentInChildren<Image>().transform.localScale = Vector3.zero;
             
@@ -310,6 +316,20 @@ public class GameLogic : MonoBehaviour
         }
         
         update_info();
+        
+        
+        /*
+         * Далее идет проверка на то, надо ли менять фоновую музыку или нет.
+         */
+        
+        if (audio.enabled && !audio.isPlaying)
+        {
+            currentMusic++;
+            currentMusic %= backMusics.Length;
+            audio.clip = backMusics[currentMusic];
+            audio.Play();
+        }
+        
     }
     
     
