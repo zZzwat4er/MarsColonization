@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Numerics;
+using Game_Classes;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -34,12 +36,12 @@ public class Statistics : MonoBehaviour
     public void info_update()
     {
         TimeUpdate();
-        inGameTimeWholeText.text = "Время в игре: " + inGameTimeWhole;
-        inGameTimeAfetrResetText.text = "Время в игре послу сброса: " + inGameTimeAfetrReset;
-        totalGText.text = "Всего G заработанно: " + totalG;
-        totalGAfterResetText.text = "G заработанное после сброса: " + totalGAfterReset;
-        totalSpendGText.text = "Всего G потрачено: " + totalSpendG;
-        totalSpendGAfterResetText.text = "G потрачено после сброса: " + totalSpendGAfterReset;
+        inGameTimeWholeText.text = "Time played (in total): " + inGameTimeWhole;
+        inGameTimeAfetrResetText.text = "Time played (this reset): " + inGameTimeAfetrReset;
+        totalGText.text = "G received (in total): " + BigToShort.Convert(totalG.ToString());
+        totalGAfterResetText.text = "G received (this reset): " + BigToShort.Convert(totalGAfterReset.ToString());
+        totalSpendGText.text = "G spent (in total): " + BigToShort.Convert(totalSpendG.ToString());
+        totalSpendGAfterResetText.text = "G spent (this reset):  " + BigToShort.Convert(totalSpendGAfterReset.ToString());
     }
 
     //функция для получение статистики из сейва (чтобы убрать ве эти лишнее строки из gameLogic)

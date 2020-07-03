@@ -19,8 +19,8 @@ public class UpgradeBuildings : MonoBehaviour
         
         for(int i = 0; i < upgrades.Length; i++)
         {
-            upgrades[i].GetComponentsInChildren<Text>()[1].text = "Цена: " + _currentBuilding.NextCommonUpgradeCost[i] 
-                                                                           + "G\nДоход: ";
+            upgrades[i].GetComponentsInChildren<Text>()[1].text = "Cost: " + _currentBuilding.NextCommonUpgradeCost[i] 
+                                                                           + "G\nGpS: ";
             if (i == 0)
             {
                 upgrades[i].GetComponentsInChildren<Text>()[1].text += "20%";
@@ -75,14 +75,15 @@ public class UpgradeBuildings : MonoBehaviour
     public void update_info()
     {
         _currentBuilding = _.Buildings[_.CurrentBuilding];
-        NameBuild.text = "Улучшение на " + _currentBuilding.name;
+        NameBuild.text =  _currentBuilding.name + "\nCurrent multiplier: " + (int)(_currentBuilding.coef*100)+"%";
         for (int i = 0; i < upgrades.Length; ++i)
         {
             if (_currentBuilding.NextCommonUpgradeCost[i] > _.Money ||
                 levelsRcuaers[i] > _currentBuilding.Lvl) upgrades[i].interactable = false;//если денег не хватает, то выключаем кнопку
             else upgrades[i].interactable = true;//а если хватает, то включаем
-            upgrades[i].GetComponentsInChildren<Text>()[1].text = "Цена: " + _currentBuilding.NextCommonUpgradeCost[i] 
-                                                                           + "G\nДоход: ";
+            upgrades[i].GetComponentsInChildren<Text>()[1].text =
+                "Price: " + BigToShort.Convert(_currentBuilding.NextCommonUpgradeCost[i])
+                         + "G\nAdds: ";
             if (i == 0)
             {
                 upgrades[i].GetComponentsInChildren<Text>()[1].text += "20%";

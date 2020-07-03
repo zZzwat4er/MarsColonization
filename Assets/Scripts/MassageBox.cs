@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Numerics;
+using Game_Classes;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -21,7 +22,7 @@ public class MassageBox : MonoBehaviour
     }
 
 
-    void showMessage(string text, string qtMessage,  string yesMessage = null)
+    public void showMessage(string text, string qtMessage,  string yesMessage = null)
     {
         message.text = text;
         Debug.Log("msg: " + yesMessage);
@@ -41,8 +42,8 @@ public class MassageBox : MonoBehaviour
 
     public void quitButton()
     {
-        
-        messageBox.SetActive(false);
+        Destroy(gameObject);    
+        // messageBox.SetActive(false);
     }
 
     public void yesButton()
@@ -56,12 +57,13 @@ public class MassageBox : MonoBehaviour
                 Debug.LogError("Unexpected massage box state");
                 break;
         }
-        messageBox.SetActive(false);
+        // messageBox.SetActive(false);
+        Destroy(gameObject);
     }
 
     public void showIncome(BigInteger income, TimeSpan time)
     {
-        showMessage("За прошедшие " + time + " вы получили " + income + " G.","ok");
+        showMessage("You’ve been gone for " + time + " and got " + BigToShort.Convert(income) + " G.","ok");
     }
 
     public void showEvent(int index)

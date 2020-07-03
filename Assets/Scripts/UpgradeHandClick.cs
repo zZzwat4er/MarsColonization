@@ -31,12 +31,18 @@ public class UpgradeHandClick : MonoBehaviour
         if(_handClicker == null)
             _handClicker = new HandClicker(_.Buildings);
         
-        for (int i = 0; i < upgrades.Length; ++i)
+        for (int i = 0; i < upgrades.Length-1; ++i)
         {
             //иницилизируем цены на апгрейды хэндкликера
-            upgrades[i].GetComponentsInChildren<Text>()[1].text = "Цена: " + _handClicker.Costs[i] + "G\nДоход: " +
-                                                                  _handClicker.getNextIncome(i) + "G за клик";
+            upgrades[i].GetComponentsInChildren<Text>()[1].text =
+                "Price: " + BigToShort.Convert(_handClicker.Costs[i]) + "G\nNew GpS: +" +
+                BigToShort.Convert(_handClicker.getNextIncome(i)) + "G";
         }
+        //отдельно для EndGame
+        upgrades[2].GetComponentsInChildren<Text>()[1].text =
+            "Price: " + BigToShort.Convert(_handClicker.Costs[2]) +
+            "G\nAdditional 100% per tap for every 10 levels of every building";
+        
         _.update_info();//обновляем информацию
         Debug.Log("HandClock up out");
     }
@@ -56,8 +62,9 @@ public class UpgradeHandClick : MonoBehaviour
             if (_handClicker.Costs[i] > _.Money) upgrades[i].interactable = false;//если денег не хватает, то выключаем кнопку
             else upgrades[i].interactable = true;//а если хватает, то включаем
             upgrades[i].GetComponentsInChildren<Text>()[0].text = _handClicker.Names[i];//присваиваем имя а затем и инфу о кнопке
-            upgrades[i].GetComponentsInChildren<Text>()[1].text = "Цена: " + _handClicker.Costs[i] + "G\nДоход: " +
-                                                                  _handClicker.getNextIncome(i) + "G за клик";
+            upgrades[i].GetComponentsInChildren<Text>()[1].text =
+                "Price: " + BigToShort.Convert(_handClicker.Costs[i]) + "G\nNew GpS: +" +
+                BigToShort.Convert(_handClicker.getNextIncome(i)) + "G";
         }
     }
 }

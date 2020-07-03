@@ -147,14 +147,14 @@ public class GameLogic : MonoBehaviour
         
         /*изменения зданий*/
         NameText.text = _buildings[current_building].Name;//ставим имя
-        MoneyText.text = "+ "+_buildings[current_building].Income + "G/"+_buildings[current_building].Time_+" сек.";//показываем доход со здания
+        MoneyText.text = "+ "+ BigToShort.Convert(_buildings[current_building].Income) + "G/s";//показываем доход со здания
         
-        MonetsText.text = (new BigFloat(money)).Round().ToString() + "G";//Текущий счет
-        HeadText.text = (_buildings[current_building].IsAvaliable ? "Улучшить " : "Купить ");//кнопка для покупки здания
+        MonetsText.text = BigToShort.Convert((new BigFloat(money)).Round().ToString()) + "G";//Текущий счет
+        HeadText.text = (_buildings[current_building].IsAvaliable ? "Upgrade " : "Buy ");//кнопка для покупки здания
         
         lvlText.text = _buildings[current_building].Lvl + " lvl.";//показатель уровня
-        InfoText.text = "Цена: " + _buildings[current_building].NextCost + "G\n+" +
-                        _buildings[current_building].nextIncome() + "G / " + _buildings[current_building].Time_ + " s";
+        InfoText.text = "Cost: " + BigToShort.Convert(_buildings[current_building].NextCost) + "G\nGpS: +" +
+                        BigToShort.Convert(_buildings[current_building].nextIncome())+"G";
 
         if (money < _buildings[current_building].NextCost)
         {
@@ -173,7 +173,7 @@ public class GameLogic : MonoBehaviour
         //информация по хэнд кликеру
         if( GetComponent<UpgradeHandClick>().HandClicker!= null)
         {
-            handClickInfoText.text = "+ " + GetComponent<UpgradeHandClick>().HandClicker.Income + "G";
+            handClickInfoText.text = "+ " + BigToShort.Convert(GetComponent<UpgradeHandClick>().HandClicker.Income)+ "G";
             GetComponent<UpgradeHandClick>().update_info();
         }
         
@@ -202,7 +202,7 @@ public class GameLogic : MonoBehaviour
         current_building += count;
         buildingsImage[current_building].transform.DOMove(current.transform.position, animation_duration);
         if (!_buildings[current_building].IsAvaliable)
-            BuyButton.GetComponentInChildren<Text>().text = "Купить";
+            BuyButton.GetComponentInChildren<Text>().text = "Buy";
         update_info();
     }
 
@@ -236,13 +236,13 @@ public class GameLogic : MonoBehaviour
         {
             // применить евент и показать его
             GetComponent<Metamechanics>().playEvent();
-            msgShower.GetComponent<MassageBox>().showEvent(events.Last().Index);
+            msgShower.GetComponent<CallMessageBox>().showEvent(events.Last().Index);
             timeToNextEvent = 600;
         }
         // предложение получить престиж
         if(money >= BigInteger.Pow(10, tensPower))
         {
-            msgShower.GetComponent<MassageBox>().showPrestige(money);
+            msgShower.GetComponent<CallMessageBox>().showPrestige(money);
             tensPower++;
         }
         //Здесь считаем прогресс дохода здания
@@ -379,7 +379,7 @@ public class GameLogic : MonoBehaviour
                 resInc += _buildings[i].Income * (int)(countOfTiks / 2);
             }
         }
-        msgShower.GetComponent<MassageBox>().showIncome(resInc, new TimeSpan(0, 0, 0, (int)secondsSinceSave, 0)); //TODO: поменяй тут так, чтобы показывало всё правильно
+        msgShower.GetComponent<CallMessageBox>().showIncome(resInc, new TimeSpan(0, 0, 0, (int)secondsSinceSave, 0)); //TODO: поменяй тут так, чтобы показывало всё правильно
     }
 
     public void buildingsInit(int prestigeBonus = 4)
