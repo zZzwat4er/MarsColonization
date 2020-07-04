@@ -114,22 +114,44 @@ public class GameLogic : MonoBehaviour
         }
 
         //пробуем загрузить сейв и если он есть подкачиваем от туда инфу
+        try
+        {
+            Save save = SaveSystem.load();
+            if (save != null)
+            {
+                _buildings = save.buildings;
+                money = save.money;
+                GetComponent<UpgradeHandClick>().HandClicker = save.handClicker;
+                timeSkip(save.savedTime);
+                Statistics.statLoad(save);
+                tensPower = save.tensPower;
+                return;
+            }
+            else
+            {
+                buildingsInit();
+            }
+        }
+        catch (Exception e)
+        {
+            Debug.Log(e);
+            msgShower.GetComponent<CallMessageBox>()
+                .showMessage("Произошла ошибка во время загрузки сохранения. прогресс будет сброшен", "ok");
+            try
+            {
+                buildingsInit();
+            }
+            catch (Exception exception)
+            {
+                msgShower.GetComponent<CallMessageBox>()
+                    .showMessage("Произошла ошибка во время сброса", "ok");
+                Debug.Log(exception);
+                throw;
+            }
+            
+        }
+       
         
-        Save save = SaveSystem.load();
-        if (save != null)
-        {
-            _buildings = save.buildings;
-            money = save.money;
-            GetComponent<UpgradeHandClick>().HandClicker = save.handClicker;
-            timeSkip(save.savedTime);
-            Statistics.statLoad(save);
-            tensPower = save.tensPower;
-            return;
-        }
-        else
-        {
-            buildingsInit();
-        }
 
         update_info();
         
