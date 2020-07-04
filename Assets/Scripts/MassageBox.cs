@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class MassageBox : MonoBehaviour
 {
-    [SerializeField] private Metamechanics metamech;
+    public Metamechanics metamech;
 
     [SerializeField] private GameObject messageBox;// massage box it self
     [SerializeField] private Text message;
