@@ -8,11 +8,13 @@ using UnityEngine;
 public class CallMessageBox : MonoBehaviour
 {
     [SerializeField] private GameObject msgBox;
+    [SerializeField] private Metamechanics metamech;
     
     public void showMessage(string text, string qtMessage,  string yesMessage = null)
     {
         var tmpMsgBox = Instantiate(msgBox, this.transform);
         tmpMsgBox.transform.SetParent(this.transform);
+        tmpMsgBox.GetComponent<MassageBox>().metamech = this.metamech;
         tmpMsgBox.GetComponent<MassageBox>().showMessage(text, qtMessage, yesMessage);
     }
     
@@ -38,6 +40,7 @@ public class CallMessageBox : MonoBehaviour
     {
         var tmp =  Instantiate(msgBox, this.transform);
         tmp.transform.SetParent(this.transform);
+        tmp.GetComponent<MassageBox>().metamech = this.metamech;
         tmp.GetComponent<MassageBox>().showPrestige(money);
         
     }
