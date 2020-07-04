@@ -50,8 +50,12 @@ public class GameLogic : MonoBehaviour
         get => money;
         set => money = value;
     }
+    public BigInteger GPrime
+    {
+        get => gPrime;
+        set => gPrime = value;
+    }
 
-    
 
     [Header("Инфа здания")]
     [SerializeField] private Text NameText,  MoneyText, TimeText, MonetsText;
@@ -72,11 +76,12 @@ public class GameLogic : MonoBehaviour
         //переменные для работы и совершения вычислений
     private int current_building = 0;
     private BigInteger money = 0;
+    private BigInteger gPrime = 0;
     private DateTime pauseTime = DateTime.Now;//переменная сохраняющая время паузы для timeSkip если игрок не закроет игру при сворачивании
     private int tensPower = 5;
     public List<Events> events = new List<Events>();
     private float timeToNextEvent = 600;
-    private TimeSpan timeSkipBound = new TimeSpan(8, 0, 0);
+    private TimeSpan baseTimeSkipBound = new TimeSpan(8, 0, 0);
     
     [Header("Message Box")][SerializeField]
     private GameObject msgShower;
@@ -120,6 +125,7 @@ public class GameLogic : MonoBehaviour
         {
             _buildings = save.buildings;
             money = save.money;
+            gPrime = save.gPrime;
             GetComponent<UpgradeHandClick>().HandClicker = save.handClicker;
             timeSkip(save.savedTime);
             Statistics.statLoad(save);
@@ -140,8 +146,6 @@ public class GameLogic : MonoBehaviour
 
     public void update_info()
     {
-        _buildings[0].recalculateIncome();
-        
         //Функция обновляют всю информацию игры
         //Ее нужно всегда вызывать после всяческих изменений
         
@@ -357,12 +361,10 @@ public class GameLogic : MonoBehaviour
     //функция для скипа времени в игре
     private void timeSkip(DateTime savedTime)
     {
-        
-        
         // высчитываем кол-во секунд с момента выключения игры
         double secondsSinceSave = DateTime.Now.Subtract(savedTime).TotalSeconds;
         //проверка на ограничение
-        if (secondsSinceSave > timeSkipBound.TotalSeconds) secondsSinceSave = timeSkipBound.TotalSeconds;
+        if (secondsSinceSave > baseTimeSkipBound.TotalSeconds) secondsSinceSave = baseTimeSkipBound.TotalSeconds;
         if(secondsSinceSave < 1) return;
         BigInteger resInc = 0;
         //проходим через все здания для выщита прибыли от здания за прошедшее время
@@ -385,11 +387,8 @@ public class GameLogic : MonoBehaviour
     public void buildingsInit(int prestigeBonus = 4)
     {
         /*Тут инициализируем объекты и создаем здания*/
-        
-        money = 0;//инициализация денег
+        money = 999999;//инициализация денег
         _buildings = new Building[number_of_buildings];//инициализация здания
-        
-        current_building = 0;//ставим текущие здание как 0
         for (int i = 0; i < number_of_buildings; ++i)
         {
             BigInteger sell;
