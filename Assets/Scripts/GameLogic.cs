@@ -83,6 +83,7 @@ public class GameLogic : MonoBehaviour
     private float timeToNextEvent = 600;
     private TimeSpan baseTimeSkipBound = new TimeSpan(8, 0, 0);
     
+    
     [Header("Message Box")][SerializeField]
     private GameObject msgShower;
 
@@ -130,6 +131,8 @@ public class GameLogic : MonoBehaviour
             timeSkip(save.savedTime);
             Statistics.statLoad(save);
             tensPower = save.tensPower;
+            UpgradeManagers.TimeLVL = save.manLVLs[0];
+            UpgradeManagers.multiLVL = save.manLVLs[1];
             return;
         }
         else
@@ -364,7 +367,7 @@ public class GameLogic : MonoBehaviour
         // высчитываем кол-во секунд с момента выключения игры
         double secondsSinceSave = DateTime.Now.Subtract(savedTime).TotalSeconds;
         //проверка на ограничение
-        if (secondsSinceSave > baseTimeSkipBound.TotalSeconds) secondsSinceSave = baseTimeSkipBound.TotalSeconds;
+        if (secondsSinceSave > baseTimeSkipBound.TotalSeconds + 3600 * UpgradeManagers.TimeLVL) secondsSinceSave = baseTimeSkipBound.TotalSeconds;
         if(secondsSinceSave < 1) return;
         BigInteger resInc = 0;
         //проходим через все здания для выщита прибыли от здания за прошедшее время
@@ -375,10 +378,10 @@ public class GameLogic : MonoBehaviour
             
             if (countOfTiks > 0 && Buildings[i].IsAvaliable)
             {
-                money += _buildings[i].Income * (int)(countOfTiks / 2);
-                Statistics.totalG += _buildings[i].Income * (int)(countOfTiks / 2);
-                Statistics.totalGAfterReset += _buildings[i].Income * (int)(countOfTiks / 2);
-                resInc += _buildings[i].Income * (int)(countOfTiks / 2);
+                money += _buildings[i].Income * (int)(countOfTiks * (0.5 + 0.05 * UpgradeManagers.multiLVL));
+                Statistics.totalG += _buildings[i].Income * (int)(countOfTiks * (0.5 + 0.05 * UpgradeManagers.multiLVL));
+                Statistics.totalGAfterReset += _buildings[i].Income * (int)(countOfTiks * (0.5 + 0.05 * UpgradeManagers.multiLVL));
+                resInc += _buildings[i].Income * (int)(countOfTiks * (0.5 + 0.05 * UpgradeManagers.multiLVL));
             }
         }
         msgShower.GetComponent<CallMessageBox>().showIncome(resInc, new TimeSpan(0, 0, 0, (int)secondsSinceSave, 0)); //TODO: поменяй тут так, чтобы показывало всё правильно
@@ -387,7 +390,7 @@ public class GameLogic : MonoBehaviour
     public void buildingsInit(int prestigeBonus = 4)
     {
         /*Тут инициализируем объекты и создаем здания*/
-        money = 999999;//инициализация денег
+        money = 0;//инициализация денег
         _buildings = new Building[number_of_buildings];//инициализация здания
         for (int i = 0; i < number_of_buildings; ++i)
         {
