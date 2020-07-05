@@ -16,8 +16,8 @@ public class Metamechanics : MonoBehaviour
         Statistics.totalSpendGAfterReset = 0;
         Statistics.inGameTimeAfetrReset = new TimeSpan(0, 0, 0);
         _.buildingsInit(resetBoost);
-        //todo: improve handclick "base_income"
         _.GetComponent<UpgradeHandClick>().HandClicker = new HandClicker(_.Buildings);
+        _.GetComponent<UpgradeHandClick>().HandClicker.prestigeCoef = (float)(Math.Pow(resetBoost - 3, 1.1) - (resetBoost - 4));
     }
     //сиграть эвент
     public void playEvent()

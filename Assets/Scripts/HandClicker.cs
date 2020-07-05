@@ -22,6 +22,7 @@ namespace Game_Classes
         public int[] specCoef={0, 0,  0};//специальный коэфициент для формулы
         public int coef; //коэфициент для формулы
         public int amt;
+        public float prestigeCoef;
         public BigInteger income; // доход с одного клика
         public BigInteger base_income;//базовый доход (по идее не нужен, но в формуле есть)
         public Building[] _buildings; //ссылки на здания
@@ -35,6 +36,7 @@ namespace Game_Classes
             base_income = 1;
             income = 1;
             amt = 1;
+            prestigeCoef = 1;
 
         }
 
@@ -51,7 +53,7 @@ namespace Game_Classes
                 lvls += _buildings[i].Lvl;
             }
             
-            res = (coef + (index == 1 ? 1 : 0) + (specCoef[2] + (index == 2? 1 :0))*lvls/10)*(amt + (index == 0? 1:0));
+            res = (int)(prestigeCoef * 100) * (coef + (index == 1 ? 1 : 0) + (specCoef[2] + (index == 2? 1 :0))*lvls/10)*(amt + (index == 0? 1:0) / 100);
             return res;
         }
 

@@ -18,7 +18,7 @@ public class MassageBox : MonoBehaviour
 
     private void Start()
     {
-        
+        metamech = FindObjectOfType<Metamechanics>();
     }
 
 
@@ -48,15 +48,18 @@ public class MassageBox : MonoBehaviour
 
     public void yesButton()
     {
+        Debug.Log("Yes BTN");
         switch (currentState)
         {
             case 1:
+                Debug.Log("try resert");
                 metamech.gameReset(zerosCount);
                 break;
             default:
                 Debug.LogError("Unexpected massage box state");
                 break;
         }
+        Debug.Log("Yes BTN asdfghjk");
         // messageBox.SetActive(false);
         Destroy(gameObject);
     }
