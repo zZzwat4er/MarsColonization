@@ -265,7 +265,7 @@ public class GameLogic : MonoBehaviour
         {
             // применить евент и показать его
             GetComponent<Metamechanics>().playEvent();
-            msgShower.GetComponent<CallMessageBox>().showEvent(events.Last().Index);
+            msgShower.GetComponent<CallMessageBox>().showMessageWithTitle(events.Last().Title, events.Last().Description, "Ok");
             timeToNextEvent = 600;
         }
         // предложение получить престиж
