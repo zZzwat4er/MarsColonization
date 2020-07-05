@@ -29,11 +29,12 @@ public class UpgradeManagers : MonoBehaviour
     {
         Debug.Log("onShow UpgradeBuild In");
 
-        upgrades[0].GetComponentsInChildren<Text>()[1].text = "Price: " + BigToShort.Convert(1000000 * BigInteger.Pow(10, TimeLVL)) 
+        upgrades[0].GetComponentInChildren<Text>().text = "Price: " + BigToShort.Convert(1000000 * BigInteger.Pow(10, TimeLVL)) 
                                                                        + "G\nAdds: + 1 hour In not active time";
-        upgrades[1].GetComponentsInChildren<Text>()[1].text = "Price: " + BigToShort.Convert(1000000 * BigInteger.Pow(10, multiLVL)) 
-                                                                       + "G\nAdds: ";
+        upgrades[1].GetComponentInChildren<Text>().text = "Price: " + BigToShort.Convert(1000000 * BigInteger.Pow(10, multiLVL)) 
+                                                                       + "G\nAdds: + 5% of Income in not active time";
         _.update_info();
+        update_info();
         Debug.Log("onShow UpgradeBuild out");
     }
 
@@ -57,10 +58,10 @@ public class UpgradeManagers : MonoBehaviour
             if (1000000 * BigInteger.Pow(10, lvls[i]) > _.Money) upgrades[i].interactable = false;//если денег не хватает, то выключаем кнопку
             else upgrades[i].interactable = true;//а если хватает, то включаем
             
-            upgrades[0].GetComponentsInChildren<Text>()[1].text = "Price: " + BigToShort.Convert(1000000 * BigInteger.Pow(10, TimeLVL)) 
+            upgrades[0].GetComponentInChildren<Text>().text = "Price: " + BigToShort.Convert(1000000 * BigInteger.Pow(10, TimeLVL)) 
                                                                             + "G\nAdds: + 1 hour In not active time";
-            upgrades[1].GetComponentsInChildren<Text>()[1].text = "Price: " + BigToShort.Convert(1000000 * BigInteger.Pow(10, multiLVL)) 
-                                                                            + "G\nAdds: ";
+            upgrades[1].GetComponentInChildren<Text>().text = "Price: " + BigToShort.Convert(1000000 * BigInteger.Pow(10, multiLVL)) 
+                                                                            + "G\nAdds: + 5% of Income in not active time";
         }
     }
 }

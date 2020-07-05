@@ -84,7 +84,7 @@ public class GameLogic : MonoBehaviour
     
     
     [Header("Message Box")][SerializeField]
-    private GameObject msgShower;
+    public GameObject msgShower;
 
     [Header("Фоновая музыка")] [SerializeField]
     private AudioClip[] backMusics;
@@ -103,15 +103,16 @@ public class GameLogic : MonoBehaviour
             //Создаем самое первое здание, которое будет стоять по середине экрана
         buildingsImage[0] = Instantiate(current, current.transform.position, Quaternion.identity);
         buildingsImage[0].transform.SetParent(buildings_panel.transform);
-        buildingsImage[0].transform.localScale= new Vector3(1, 1, 1);
+        buildingsImage[0].transform.localScale= new Vector3(1.5f, 1.5f, 1.5f);
         buildingsImage[0].GetComponent<Image>().sprite = buildingSprites[0];//ставим изображение
         buildingsImage[0].transform.GetChild(0).GetComponent<Image>().sprite = buildingSprites[0];
+        
         for (int i = 1; i < number_of_buildings; ++i)
         {
             //остальные здания будут справа, как следующие
             buildingsImage[i] = Instantiate(next, next.transform.position, Quaternion.identity) as GameObject;
             buildingsImage[i].transform.SetParent(buildings_panel.transform);
-            buildingsImage[i].transform.localScale= new Vector3(1, 1, 1);
+            buildingsImage[i].transform.localScale= new Vector3(1.5f, 1.5f, 1.5f);
             buildingsImage[i].GetComponent<Image>().sprite = buildingSprites[i% buildingSprites.Length];//ставим изображение
             buildingsImage[i].transform.GetChild(0).GetComponent<Image>().sprite =  buildingSprites[i% buildingSprites.Length];
             //прикручиваем прогресс бары нашим зданиям

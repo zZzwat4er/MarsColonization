@@ -40,6 +40,13 @@ public class DailyReward : MonoBehaviour
         new Reward(0, 55), new Reward(1, 12), new Reward(2, 70), new Reward(0, 70), 
         new Reward(1, 13), new Reward(2, 90), new Reward(1, 14), new Reward(0, 100) 
     };
+
+    private string[] messages =
+    {
+        "You are playing for the {0} day in a row.\nYou get {1} G+",
+        "You are playing for the {0} day in a row.\nYou can improve {1} for free",
+        "You are playing for the {0} day in a row.\nYou get + {1}%G from your balance"
+    };
     //================================================================================================================//
     
     private DateTime now = DateTime.Now;
@@ -83,6 +90,7 @@ public class DailyReward : MonoBehaviour
             showDailyReward();
             getReward();
         }
+        _.msgShower.GetComponent<CallMessageBox>().showMessageWithTitle("Daily Reward", String.Format(messages[rewards[currentState].RewardType], currentState, rewards[currentState].Rew), "GET IT");
     }
 
 
@@ -94,17 +102,7 @@ public class DailyReward : MonoBehaviour
     public void showDailyReward()
     {
         //dailyReward.SetActive(true);
-        for (int i = 0; i < 40; i++)
-        {
-            if (currentState > i)
-            {
-                //todo: затемнение для иконки вознаграждения
-            }
-            if (currentState == i)
-            {
-                //todo: мб сделать мегание текущей награды
-            }
-        }
+       _.msgShower.GetComponent<CallMessageBox>().showMessageWithTitle("Daily Reward", String.Format(messages[rewards[currentState].RewardType], currentState, rewards[currentState].Rew), "GET IT");
     }
 
     private void getReward()

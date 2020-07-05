@@ -51,6 +51,7 @@ public class Boosters : MonoBehaviour
                     break;
             }
         }
+        update_info();
     }
 
     private void update_info()
@@ -59,7 +60,8 @@ public class Boosters : MonoBehaviour
         {
             if (prices[i] > _.GPrime) btns[i].interactable = false;//если денег не хватает, то выключаем кнопку
             else btns[i].interactable = true;//а если хватает, то включаем
-            btns[i].GetComponentsInChildren<Text>()[1].text =
+            
+            btns[i].GetComponentInChildren<Text>().text =
                 "Price: " + BigToShort.Convert(prices[i])
                           + "G+\nEffect: " + boostText[i];
         }
