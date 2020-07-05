@@ -56,8 +56,6 @@ public class GameLogic : MonoBehaviour
         set => gPrime = value;
     }
 
-    
-
     [Header("Инфа здания")]
     [SerializeField] private Text NameText,  MoneyText, TimeText, MonetsText;
     [SerializeField] private Button BuyButton;
@@ -417,7 +415,7 @@ public class GameLogic : MonoBehaviour
                 resInc += _buildings[i].Income * (int)(countOfTiks * (0.5 + 0.05 * UpgradeManagers.multiLVL));
             }
         }
-        msgShower.GetComponent<CallMessageBox>().showIncome(resInc, new TimeSpan(0, 0, 0, (int)secondsSinceSave, 0)); //TODO: поменяй тут так, чтобы показывало всё правильно
+        msgShower.GetComponent<CallMessageBox>().showIncome(resInc, new TimeSpan(0, 0, 0, (int)secondsSinceSave, 0)); 
     }
     private void timeSkip(double skipTime)
     {
@@ -443,7 +441,7 @@ public class GameLogic : MonoBehaviour
                 resInc += _buildings[i].Income * (int)(countOfTiks * (0.5 + 0.05 * UpgradeManagers.multiLVL));
             }
         }
-        msgShower.GetComponent<CallMessageBox>().showIncome(resInc, new TimeSpan(0, 0, 0, (int)secondsSinceSave, 0)); //TODO: поменяй тут так, чтобы показывало всё правильно
+        msgShower.GetComponent<CallMessageBox>().showIncome(resInc, new TimeSpan(0, 0, 0, (int)secondsSinceSave, 0));
     }
 
     public void buildingsInit(int prestigeBonus = 4)
