@@ -9,6 +9,8 @@ public class Events
     private float time;//время до конца эвент
     private float modification;//модификаторы 
     private int[] buildsIndexes;//индексы зданий на которые распростроняются модификаторы(индей хенд клика = кол-во зданий)
+    private string title;
+    private string description;
     private Building[] businesses;//массив зданий
 
     public Events(int index, Building[] buildings)
@@ -19,6 +21,10 @@ public class Events
     }
 
     #region geter - seter
+
+    public string Title => title;
+    public string Description => description;
+
     public float Time
     {
         get => time;
@@ -52,6 +58,9 @@ public class Events
                 while(!businesses[buildsIndexes[0]].isAvaliable) buildsIndexes[0] = rnd.Next(0, businesses.Length);
                 modification = 2;
                 time = 600;
+                title = "Production Epic Win!";
+                description = "Your workers at " + businesses[buildsIndexes[0]].Name 
+                                                 + " are extremely motivated! Production rate doubled for 10 active minutes!";
                 break;
             case 1:
                 buildsIndexes = new int[1];
@@ -59,6 +68,9 @@ public class Events
                 while(!businesses[buildsIndexes[0]].isAvaliable) buildsIndexes[0] = rnd.Next(0, businesses.Length);
                 modification = 0.0001f;
                 time = 600;
+                title = "Production Failure!";
+                description = "There is an accident at " + businesses[buildsIndexes[0]].Name 
+                                                         + "! It won’t produce anything for 10 active minutes!";
                 break;
             case 2:
                 buildsIndexes = new int[2];
@@ -68,6 +80,10 @@ public class Events
                 while(!businesses[buildsIndexes[1]].isAvaliable) buildsIndexes[1] = rnd.Next(0, businesses.Length);
                 modification = 1.3f;
                 time = 1200;
+                title = "Production Rate Up!";
+                description = "Your workers at " + businesses[buildsIndexes[0]].Name 
+                                                 + " and " + businesses[buildsIndexes[1]].Name 
+                                                 + " are extra motivated! Production rate increased by 30% for 20 active minutes!";
                 break;
             case 3:
                 buildsIndexes = new int[2];
@@ -77,22 +93,33 @@ public class Events
                 while(!businesses[buildsIndexes[1]].isAvaliable) buildsIndexes[1] = rnd.Next(0, businesses.Length);
                 modification = 0.7f;
                 time = 1200;
+                title = "Production Slow-down!";
+                description = "Enemy cartel has meddled with your " + businesses[buildsIndexes[0]].Name 
+                                                                    + " and " + businesses[buildsIndexes[1]].Name 
+                                                                    + "! Production rate lowered by 30% for 20 active minutes!";
                 break;
             case 4:
                 buildsIndexes = null;
                 modification = 0.05f;
                 time = 1;
+                title = "Bank Found!";
+                description = "You got some cash! You get 5% of your current bank!";
                 break;
             case 5:
                 buildsIndexes = null;
                 modification = -0.05f;
                 time = 1;
+                title = "Money Lost!";
+                description = "You had a run-in with the enemy cartel! You lose 5% of your current bank!";
                 break;
             case 6:
                 buildsIndexes = new[] { businesses.Length };
                 modification = 5;
                 time = 30;
+                title = "Boost Yourself!";
+                description = "You feel extra productive! You get x5 tapping power for 30 seconds!";
                 break;
+            // экстра эвенты (бусты)
             case 8:
                 buildsIndexes = new[] { businesses.Length };
                 modification = 5;
