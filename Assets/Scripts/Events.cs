@@ -36,8 +36,10 @@ public class Events
  *     0/1) удвоение эфективности или полная остановка на 10 мин (Вероятно изменение именно приносимых денег)
  *     2/3) Увеличение/Снижение производительности двух построек на 30% на 20 минут
  *     4/5) +/- 5% от текущей сумы денег
- *     6)усиление тапа в 5 раз на 30 сек
- * 
+ *     6)   усиление тапа в 5 раз на 30 сек
+ *     8/9) Увеличение ручного клика в 5 раз на 10 минут и в 3 раза на 20 минут.
+ *     10/11) Ускорение автокликов в 10 раз на 5 минут и в 100 раз на 30 секунд.
+ *     12)  Скип - получить прибыль за 300 секунд в один момент
 */
     private void eventSetup()
     {
@@ -90,6 +92,40 @@ public class Events
                 buildsIndexes = new[] { businesses.Length };
                 modification = 5;
                 time = 30;
+                break;
+            case 8:
+                buildsIndexes = new[] { businesses.Length };
+                modification = 5;
+                time = 600;
+                break;
+            case 9:
+                buildsIndexes = new[] { businesses.Length };
+                modification = 3;
+                time = 1200;
+                break;
+            case 10:
+                buildsIndexes = new int[businesses.Length];
+                for (int i = 0; i < businesses.Length; i++)
+                {
+                    buildsIndexes[i] = i;
+                }
+                modification = 10f;
+                time = 300;
+                break;
+            case 11:
+                buildsIndexes = new int[businesses.Length];
+                for (int i = 0; i < businesses.Length; i++)
+                {
+                    buildsIndexes[i] = i;
+                }
+                modification = 10f;
+                time = 30;
+                break;
+            case 12:
+                buildsIndexes = new [] {businesses.Length + 1};
+                
+                modification = 300f;
+                time = 1;
                 break;
             default:
                 time = -1f;

@@ -318,6 +318,13 @@ public class GameLogic : MonoBehaviour
                     events.Remove(ev);
                     break;
                 }
+
+                if (ev.getInfo().Item1[0] == number_of_buildings + 1)// если видим такой индекс то это тайм скип
+                {
+                    timeSkip(ev.getInfo().Item2);
+                    events.Remove(ev);
+                    break;
+                }
             }
 
         for (int i = 0; i < number_of_buildings; ++i)
@@ -391,6 +398,32 @@ public class GameLogic : MonoBehaviour
         
         // высчитываем кол-во секунд с момента выключения игры
         double secondsSinceSave = DateTime.Now.Subtract(savedTime).TotalSeconds;
+        //проверка на ограничение
+        if (secondsSinceSave > baseTimeSkipBound.TotalSeconds + 3600 * UpgradeManagers.TimeLVL) secondsSinceSave = baseTimeSkipBound.TotalSeconds;
+        if(secondsSinceSave < 1) return;
+        BigInteger resInc = 0;
+        //проходим через все здания для выщита прибыли от здания за прошедшее время
+        for (int i = 0; i < number_of_buildings; i++)
+        {
+            int countOfTiks =  (int)(secondsSinceSave / Buildings[i].Time_);
+
+            
+            if (countOfTiks > 0 && Buildings[i].IsAvaliable)
+            {
+                money += _buildings[i].Income * (int)(countOfTiks * (0.5 + 0.05 * UpgradeManagers.multiLVL));
+                Statistics.totalG += _buildings[i].Income * (int)(countOfTiks * (0.5 + 0.05 * UpgradeManagers.multiLVL));
+                Statistics.totalGAfterReset += _buildings[i].Income * (int)(countOfTiks * (0.5 + 0.05 * UpgradeManagers.multiLVL));
+                resInc += _buildings[i].Income * (int)(countOfTiks * (0.5 + 0.05 * UpgradeManagers.multiLVL));
+            }
+        }
+        msgShower.GetComponent<CallMessageBox>().showIncome(resInc, new TimeSpan(0, 0, 0, (int)secondsSinceSave, 0)); //TODO: поменяй тут так, чтобы показывало всё правильно
+    }
+    private void timeSkip(double skipTime)
+    {
+        
+        
+        // высчитываем кол-во секунд с момента выключения игры
+        double secondsSinceSave = skipTime;
         //проверка на ограничение
         if (secondsSinceSave > baseTimeSkipBound.TotalSeconds + 3600 * UpgradeManagers.TimeLVL) secondsSinceSave = baseTimeSkipBound.TotalSeconds;
         if(secondsSinceSave < 1) return;
