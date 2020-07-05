@@ -57,7 +57,7 @@ public class GameLogic : MonoBehaviour
     }
 
     [Header("Инфа здания")]
-    [SerializeField] private Text NameText,  MoneyText, TimeText, MonetsText;
+    [SerializeField] private Text NameText,  MoneyText, GPrimeText, MonetsText;
     [SerializeField] private Button BuyButton;
     [SerializeField] private Text HeadText, InfoText, lvlText;
     [SerializeField] private Sprite[] buildingSprites;
@@ -178,7 +178,8 @@ public class GameLogic : MonoBehaviour
         /*изменения зданий*/
         NameText.text = _buildings[current_building].Name;//ставим имя
         MoneyText.text = "+ "+ BigToShort.Convert(_buildings[current_building].Income) + "G/s";//показываем доход со здания
-        
+
+        GPrimeText.text = GPrime + "G+";
         MonetsText.text = BigToShort.Convert((new BigFloat(money)).Round().ToString()) + "G";//Текущий счет
         HeadText.text = (_buildings[current_building].IsAvaliable ? "Upgrade " : "Buy ");//кнопка для покупки здания
         

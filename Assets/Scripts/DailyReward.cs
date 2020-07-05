@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 public class DailyReward : MonoBehaviour
 {
-    [SerializeField] private GameObject dailyReward;
+    
     [SerializeField] private GameLogic _;
     
     // Rewards =======================================================================================================//
@@ -80,6 +80,7 @@ public class DailyReward : MonoBehaviour
             }
             else
             {
+                
                 return;
             }
         }
@@ -90,18 +91,18 @@ public class DailyReward : MonoBehaviour
             showDailyReward();
             getReward();
         }
-        _.msgShower.GetComponent<CallMessageBox>().showMessageWithTitle("Daily Reward", String.Format(messages[rewards[currentState].RewardType], currentState, rewards[currentState].Rew), "GET IT");
+        
     }
 
 
     public void exitBT()
     {
-        //dailyReward.SetActive(false);
+        
     }
 
     public void showDailyReward()
     {
-        //dailyReward.SetActive(true);
+        
        _.msgShower.GetComponent<CallMessageBox>().showMessageWithTitle("Daily Reward", String.Format(messages[rewards[currentState].RewardType], currentState, rewards[currentState].Rew), "GET IT");
     }
 
