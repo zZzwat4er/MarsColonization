@@ -53,7 +53,7 @@ namespace Game_Classes
                 lvls += _buildings[i].Lvl;
             }
             
-            res = (int)(prestigeCoef * 100) * (coef + (index == 1 ? 1 : 0) + (specCoef[2] + (index == 2? 1 :0))*lvls/10)*(amt + (index == 0? 1:0) / 100);
+            res = (int)(prestigeCoef * 100) * ((coef + (index == 1 ? 1 : 0) + (specCoef[2] + (index == 2? 1 :0))*lvls/10)*(amt + (index == 0? 1:0))) / 100;
             return res;
         }
 
