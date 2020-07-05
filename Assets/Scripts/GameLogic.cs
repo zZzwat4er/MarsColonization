@@ -107,6 +107,7 @@ public class GameLogic : MonoBehaviour
         buildingsImage[0].transform.SetParent(buildings_panel.transform);
         buildingsImage[0].transform.localScale= new Vector3(1, 1, 1);
         buildingsImage[0].GetComponent<Image>().sprite = buildingSprites[0];//ставим изображение
+        buildingsImage[0].transform.GetChild(0).GetComponent<Image>().sprite = buildingSprites[0];
         for (int i = 1; i < number_of_buildings; ++i)
         {
             //остальные здания будут справа, как следующие

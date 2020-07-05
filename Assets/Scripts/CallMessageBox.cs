@@ -7,7 +7,8 @@ using UnityEngine;
 
 public class CallMessageBox : MonoBehaviour
 {
-    [SerializeField] private GameObject msgBox;
+    [SerializeField] private GameObject msgBox, titleBox;
+    
     [SerializeField] private Metamechanics metamech;
     
     public void showMessage(string text, string qtMessage,  string yesMessage = null)
@@ -16,6 +17,13 @@ public class CallMessageBox : MonoBehaviour
         tmpMsgBox.transform.SetParent(this.transform);
         tmpMsgBox.GetComponent<MassageBox>().metamech = this.metamech;
         tmpMsgBox.GetComponent<MassageBox>().showMessage(text, qtMessage, yesMessage);
+    }
+
+    public void showMessageWithTitle(string title, string text, string btnText)
+    {
+        var tmp = Instantiate(titleBox, this.transform);
+        tmp.transform.SetParent(this.transform);
+        tmp.GetComponent<GetTypeMsgBox>().showMessage(title, text, btnText);
     }
     
     private void showMessage(GameObject tmpMsgBox, string text, string qtMessage,  string yesMessage = null)

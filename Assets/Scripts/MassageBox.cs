@@ -33,11 +33,13 @@ public class MassageBox : MonoBehaviour
             yes.gameObject.SetActive(true);
             yes.GetComponentInChildren<Text>().text = yesMessage;
         }
+        Debug.Log(quit);
         quit.GetComponentInChildren<Text>().text = qtMessage;
         
         messageBox.SetActive(true);
         
     }
+    
     
 
     public void quitButton()
