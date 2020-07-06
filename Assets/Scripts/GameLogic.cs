@@ -136,6 +136,7 @@ public class GameLogic : MonoBehaviour
                 timeSkip(save.savedTime);
                 Statistics.statLoad(save);
                 tensPower = save.tensPower;
+                events = save.events;
                 UpgradeManagers.TimeLVL = save.manLVLs[0];
                 UpgradeManagers.multiLVL = save.manLVLs[1];
                 
@@ -421,6 +422,11 @@ public class GameLogic : MonoBehaviour
         
         // высчитываем кол-во секунд с момента выключения игры
         double secondsSinceSave = DateTime.Now.Subtract(savedTime).TotalSeconds;
+
+        foreach (var ev in events)
+        {
+            ev.Time -= (float)secondsSinceSave;
+        }
         //проверка на ограничение
         if (secondsSinceSave > baseTimeSkipBound.TotalSeconds + 3600 * UpgradeManagers.TimeLVL) secondsSinceSave = baseTimeSkipBound.TotalSeconds;
         if(secondsSinceSave < 1) return;
@@ -447,8 +453,6 @@ public class GameLogic : MonoBehaviour
         
         // высчитываем кол-во секунд с момента выключения игры
         double secondsSinceSave = skipTime;
-        //проверка на ограничение
-        if (secondsSinceSave > baseTimeSkipBound.TotalSeconds + 3600 * UpgradeManagers.TimeLVL) secondsSinceSave = baseTimeSkipBound.TotalSeconds;
         if(secondsSinceSave < 1) return;
         BigInteger resInc = 0;
         //проходим через все здания для выщита прибыли от здания за прошедшее время
@@ -459,10 +463,10 @@ public class GameLogic : MonoBehaviour
             
             if (countOfTiks > 0 && Buildings[i].IsAvaliable)
             {
-                money += _buildings[i].Income * (int)(countOfTiks * (0.5 + 0.05 * UpgradeManagers.multiLVL));
-                Statistics.totalG += _buildings[i].Income * (int)(countOfTiks * (0.5 + 0.05 * UpgradeManagers.multiLVL));
-                Statistics.totalGAfterReset += _buildings[i].Income * (int)(countOfTiks * (0.5 + 0.05 * UpgradeManagers.multiLVL));
-                resInc += _buildings[i].Income * (int)(countOfTiks * (0.5 + 0.05 * UpgradeManagers.multiLVL));
+                money += _buildings[i].Income * (int)(countOfTiks);
+                Statistics.totalG += _buildings[i].Income * (int)(countOfTiks);
+                Statistics.totalGAfterReset += _buildings[i].Income * (int)(countOfTiks);
+                resInc += _buildings[i].Income * (int)(countOfTiks);
             }
         }
         msgShower.GetComponent<CallMessageBox>().showIncome(resInc, new TimeSpan(0, 0, 0, (int)secondsSinceSave, 0));

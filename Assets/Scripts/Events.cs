@@ -3,6 +3,7 @@ using Game_Classes;
 using UnityEngine;
 using Random = System.Random;
 
+[Serializable]
 public class Events
 { 
     private int index;//индех эвента (вроде пока не нужен но пусть будет)

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Numerics;
 using Game_Classes;
 using UnityEngine;
@@ -17,21 +18,23 @@ public class Save{
     public HandClicker handClicker;
     public int tensPower; // данные престижа
     public int[] manLVLs; // уровни менеджеров
+    public List<Events> events;
     
-    public Save (Building[] buildings, BigInteger money, BigInteger gPrime, DateTime time, HandClicker handClick, int tensPower){ //, HandClicker handClick){
-        this.buildings = buildings;
-        this.money = money;
-        this.gPrime = gPrime;
+    public Save (GameLogic _){ //, HandClicker handClick){
+        buildings = _.Buildings;
+        money = _.Money;
+        gPrime = _.GPrime;
+        events = _.events;
         manLVLs = new [] {UpgradeManagers.TimeLVL, UpgradeManagers.multiLVL};
-        savedTime = time;
+        savedTime = DateTime.Now;
         inGameTimeWhole = Statistics.inGameTimeWhole;
         inGameTimeAfetrReset = Statistics.inGameTimeAfetrReset;
         totalG = Statistics.totalG;
         totalGAfterReset = Statistics.totalGAfterReset;
         totalSpendG = Statistics.totalSpendG;
         totalSpendGAfterReset = Statistics.totalSpendGAfterReset;
-        this.handClicker = handClick;
-        this.tensPower = tensPower;
+        handClicker = _.GetComponent<UpgradeHandClick>().HandClicker;
+        tensPower = _.TensPower;
         if(DateTime.Now.Hour < 10)
             lastDailyReward = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day - 1, 10, 0, 0);
         else 
