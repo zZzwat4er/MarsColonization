@@ -26,7 +26,7 @@ public class Boosters : MonoBehaviour
     */ 
     public void buttons(int buttonIndex)
     {
-        if(prices[buttonIndex] < _.GPrime)
+        if(prices[buttonIndex] <= _.GPrime)
         {
             _.GPrime -= prices[buttonIndex];
 
@@ -51,6 +51,7 @@ public class Boosters : MonoBehaviour
                     break;
             }
         }
+        
         update_info();
     }
 

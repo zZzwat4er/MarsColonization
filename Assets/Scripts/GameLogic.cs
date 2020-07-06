@@ -38,6 +38,9 @@ public class GameLogic : MonoBehaviour
         "Governmental Building", "Gates of Hell", "Planet Core"};
     private int[] depedents = {1, 2, -1, 7, 8, 6, -1, 11, 9, -1, 12, -1, -1, 13}; //-1 нет апгрейда, любой другое - номер здания от которого зависит апгрейд
     private float[] risks = { 0, 0, 5, 5, 10, -10, 5, 10, 15, -20, 0, -30, 30, 0};
+    
+    private int[] buidBoost = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
+    
     /**********************************************************************/
     
     //Геттеры и сеттеры
@@ -135,6 +138,7 @@ public class GameLogic : MonoBehaviour
                 tensPower = save.tensPower;
                 UpgradeManagers.TimeLVL = save.manLVLs[0];
                 UpgradeManagers.multiLVL = save.manLVLs[1];
+                
                 return;
             }
             else
@@ -160,15 +164,18 @@ public class GameLogic : MonoBehaviour
             }
             
         }
-       
-        
 
+
+        
         update_info();
         
         Debug.Log("GameLogic Out");
     }
 
-   
+    public void addGPrem()
+    {
+        gPrime += 10;
+    }
 
     public void update_info()
     {
@@ -177,7 +184,7 @@ public class GameLogic : MonoBehaviour
         
         /*изменения зданий*/
         NameText.text = _buildings[current_building].Name;//ставим имя
-        MoneyText.text = "+ "+ BigToShort.Convert(_buildings[current_building].Income) + "G/s";//показываем доход со здания
+        MoneyText.text = "+ "+ BigToShort.Convert(_buildings[current_building].Income*buidBoost[current_building]) + "G/s";//показываем доход со здания
 
         GPrimeText.text = GPrime + "G+";
         MonetsText.text = BigToShort.Convert((new BigFloat(money)).Round().ToString()) + "G";//Текущий счет
@@ -204,7 +211,18 @@ public class GameLogic : MonoBehaviour
         //информация по хэнд кликеру
         if( GetComponent<UpgradeHandClick>().HandClicker!= null)
         {
-            handClickInfoText.text = "+ " + BigToShort.Convert(GetComponent<UpgradeHandClick>().HandClicker.Income)+ "G";
+            float eventMod = -1f;
+            if(events != null)
+                foreach (var ev in events)
+                {
+                    if(ev.getInfo().Item1 != null)
+                        if (ev.getInfo().Item1[0] == NumberOfBuildings)
+                            eventMod += ev.getInfo().Item2;
+                }
+
+            if (eventMod == -1f) eventMod = 0f;
+            eventMod += 1f;
+            handClickInfoText.text = "+ " + BigToShort.Convert((GetComponent<UpgradeHandClick>().HandClicker.Income*(int)eventMod))+ "G";
             GetComponent<UpgradeHandClick>().update_info();
         }
         
@@ -255,6 +273,7 @@ public class GameLogic : MonoBehaviour
         Statistics.totalG += GetComponent<UpgradeHandClick>().HandClicker.Income * (int)eventMod;
         Statistics.totalGAfterReset += GetComponent<UpgradeHandClick>().HandClicker.Income * (int)eventMod;
         money += GetComponent<UpgradeHandClick>().HandClicker.Income * (int)eventMod;
+        
         update_info();
         
     }
@@ -309,6 +328,7 @@ public class GameLogic : MonoBehaviour
                 ev.Time -= Time.deltaTime;
                 if (ev.Time < 0)//удаление законченого эвента
                 {
+
                     events.Remove(ev);
                     break;
                 }
@@ -336,7 +356,7 @@ public class GameLogic : MonoBehaviour
                 foreach (var ev in events)
                     foreach (var index in ev.getInfo().Item1)
                     {
-                        Debug.Log(index);
+                        
                         if (index == i) eventMod += ev.getInfo().Item2;
                     }
 
@@ -351,6 +371,8 @@ public class GameLogic : MonoBehaviour
          
                 
             }
+
+            buidBoost[i] = (int)eventMod;
         }
         
         update_info();
@@ -453,6 +475,8 @@ public class GameLogic : MonoBehaviour
         _buildings = new Building[number_of_buildings];//инициализация здания
         for (int i = 0; i < number_of_buildings; ++i)
         {
+
+            buildingsImage[i].transform.GetChild(0).GetComponent<Image>().fillAmount = 0;
             BigInteger sell;
             if (prestigeBonus < 24) sell = base_cost[i] * (prestigeBonus - 4) / 20;
             else sell = base_cost[i] * 100 / 99;

@@ -13,6 +13,7 @@ public class Metamechanics : MonoBehaviour
     {
         _.Money = 0;
         Statistics.totalGAfterReset = 0;
+        _.events.Clear();
         Statistics.totalSpendGAfterReset = 0;
         Statistics.inGameTimeAfetrReset = new TimeSpan(0, 0, 0);
         _.buildingsInit(resetBoost);
